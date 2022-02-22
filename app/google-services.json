@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1050017596567",
+    "project_id": "burparking",
+    "storage_bucket": "burparking.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1050017596567:android:d9787a9c6fb9440a6555d2",
+        "android_client_info": {
+          "package_name": "com.example.burparking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1050017596567-0no1tqohn65u5f4rg80jdqp6bbe7bt80.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.burparking",
+            "certificate_hash": "42040f59fd10fb85f8583c19b15ea2f161d6fd30"
+          }
+        },
+        {
+          "client_id": "1050017596567-qok4eq9mmpdno8tjjm6tsft7hbflemmb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARFOlBZduA1M8N0HFg9Ynhi6E7sv3xcDY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1050017596567-qok4eq9mmpdno8tjjm6tsft7hbflemmb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
