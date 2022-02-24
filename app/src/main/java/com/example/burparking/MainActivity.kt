@@ -17,7 +17,9 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.example.burparking.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
-
+/*
+ TODO: Dependiendo en que fragmento estemos, habilitar el botón "cerrar sesión"
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -32,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         val drawerLayout: DrawerLayout = binding.drawerLayout
+
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         NavigationUI.setupActionBarWithNavController(this, navController, binding.drawerLayout)
@@ -72,18 +75,20 @@ class MainActivity : AppCompatActivity() {
         prefs.apply()
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navController = findNavController(R.id.nav_host_fragment_content_main)
+        val navView: NavigationView = binding.navView
         navController.navigate(R.id.action_principalFragment_to_loginFragment)
         drawerLayout.closeDrawers()
-
+        val item = navView.menu.findItem(R.id.nav_cerrar_sesion)
+        item.isEnabled = false
         return true
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return NavigationUI.navigateUp(navController, binding.drawerLayout)
 //        val navController = findNavController(R.id.nav_host_fragment_content_main)
-//        return navController.navigateUp(appBarConfiguration)
-//                || super.onSupportNavigateUp()
+//        return NavigationUI.navigateUp(navController, binding.drawerLayout)
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        return navController.navigateUp(appBarConfiguration)
+                || super.onSupportNavigateUp()
     }
 
 
