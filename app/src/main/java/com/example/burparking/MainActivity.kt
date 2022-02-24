@@ -81,11 +81,7 @@ class MainActivity : AppCompatActivity() {
         prefs.clear()
         prefs.apply()
         val drawerLayout: DrawerLayout = binding.drawerLayout
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        val navView: NavigationView = binding.navView
         drawerLayout.closeDrawers()
-        val item = navView.menu.findItem(R.id.nav_cerrar_sesion)
-        item.isEnabled = false
         navegarLogin()
         return true
     }
