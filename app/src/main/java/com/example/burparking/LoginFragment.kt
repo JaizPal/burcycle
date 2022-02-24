@@ -83,6 +83,8 @@ class LoginFragment : Fragment() {
                                 it.result.user?.email ?: "",
                                 PrincipalFragment.ProviderType.BASIC
                             )
+                            val metadata = it.result.user?.metadata
+
                         } else {
                             showAlert()
                         }
