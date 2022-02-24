@@ -20,6 +20,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColorHint="#80CB81"
+            app:hintTextColor="#80CB81"
+            app:startIconDrawable="@drawable/ic_baseline_alternate_email_24"
+            app:startIconTint="#80CB81">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="email" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <EditText
             android:id="@+id/emailEditText"
             android:layout_width="match_parent"

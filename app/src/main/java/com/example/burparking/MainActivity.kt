@@ -16,7 +16,7 @@ import com.google.android.material.navigation.NavigationView
 /*
  TODO: Dependiendo en que fragmento estemos, habilitar el botón "cerrar sesión"
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -40,8 +40,7 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupActionBarWithNavController(this, navController, binding.drawerLayout)
         NavigationUI.setupWithNavController(binding.navView, navController)
 
-        navView.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener {item -> cerrarSesion()
-        })
+        navView.setNavigationItemSelectedListener(this)
 
 //        setSupportActionBar(binding.toolbar)
 //
@@ -65,16 +64,16 @@ class MainActivity : AppCompatActivity() {
         prefs.apply()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId){
-            R.id.nav_cerrar_sesion -> cerrarSesion()
-        }
-        return true
-//        return when (item.itemId) {
-//            R.id.action_settings -> true
-//            else -> super.onOptionsItemSelected(item)
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        when (item.itemId){
+//            R.id.nav_cerrar_sesion -> cerrarSesion()
 //        }
-    }
+//        return true
+////        return when (item.itemId) {
+////            R.id.action_settings -> true
+////            else -> super.onOptionsItemSelected(item)
+////        }
+//    }
 
     private fun cerrarSesion(): Boolean {
         val prefs = this.getSharedPreferences("inicioSesion", Context.MODE_PRIVATE)!!.edit()
@@ -87,16 +86,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-//        val navController = findNavController(R.id.nav_host_fragment_content_main)
-//        return NavigationUI.navigateUp(navController, binding.drawerLayout)
         val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
+        return NavigationUI.navigateUp(navController, binding.drawerLayout)
+//        val navController = findNavController(R.id.nav_host_fragment_content_main)
+//        return navController.navigateUp(appBarConfiguration)
+//                || super.onSupportNavigateUp()
     }
 
     private fun navegarLogin(){
         val intent = Intent(this, LoginActivity::class.java).apply {  }
         startActivity(intent)
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId){
+            R.id.nav_cerrar_sesion -> cerrarSesion()
+        }
+        return true
     }
 
 
