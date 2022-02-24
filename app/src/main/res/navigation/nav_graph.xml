@@ -3,16 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.example.burparking.LoginFragment"
-        android:label="Iniciar sesión"
-        tools:layout="@layout/fragment_login">
-        <action
-            android:id="@+id/action_loginFragment_to_principalFragment"
-            app:destination="@id/principalFragment" />
-    </fragment>
+    app:startDestination="@id/principalFragment">
     <fragment
         android:id="@+id/principalFragment"
         android:name="com.example.burparking.PrincipalFragment"
@@ -24,10 +15,5 @@
         <argument
             android:name="provider"
             app:argType="string" />
-        <action
-            android:id="@+id/action_principalFragment_to_loginFragment"
-            app:destination="@id/loginFragment"
-            app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

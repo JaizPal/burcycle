@@ -3,68 +3,57 @@ package com.example.burparking
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
+import android.util.AttributeSet
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import com.example.burparking.databinding.FragmentLoginBinding
+import com.example.burparking.databinding.ActivityLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 
+class LoginActivity : AppCompatActivity() {
 
-class LoginFragment : Fragment() {
-
-    var _binding : FragmentLoginBinding? = null
-    val binding get() = _binding!!
-
+    private lateinit var binding: ActivityLoginBinding
     private val GOOGLE_SIG_IN = 100
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-    }
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentLoginBinding.inflate(inflater, container, false)
         setup()
         session()
-        return binding.root
+
     }
 
     private fun session() {
-        val prefs = activity?.getSharedPreferences("inicioSesion", Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences("inicioSesion", Context.MODE_PRIVATE)
         val email = prefs?.getString("email", null)
-        val provider = prefs?.getString("provider", null)
-        if (email != null && provider != null) {
+        val photoURI = prefs?.getString("photoURI", null)
+        if (email != null && photoURI != null) {
             binding.inicioLayout.visibility = View.INVISIBLE
-            navegarPrincipal(email, PrincipalFragment.ProviderType.valueOf(provider))
+            navegarPrincipal(email, photoURI.toString())
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        binding.inicioLayout.visibility = View.VISIBLE
-    }
-
     private fun setup() {
-
         binding.registrarButton.setOnClickListener {
             if(binding.emailEditText.text.isNotEmpty() && binding.paswordEditText.text.isNotEmpty()) {
                 FirebaseAuth.getInstance()
                     .createUserWithEmailAndPassword(binding.emailEditText.text.toString(),
-                    binding.paswordEditText.text.toString()).addOnCompleteListener{
+                        binding.paswordEditText.text.toString()).addOnCompleteListener{
                         if (it.isSuccessful) {
-                            navegarPrincipal(it.result.user?.email ?: "", PrincipalFragment.ProviderType.BASIC)
+//                            navegarPrincipal(it.result.user?.email ?: "", PrincipalFragment.ProviderType.BASIC)
+                            val email = it.result.user?.email ?: ""
+                            val photoURI = it.result.user?.photoUrl ?: ""
+                            navegarPrincipal(email, photoURI.toString())
                         } else {
                             showAlert()
                         }
@@ -72,6 +61,7 @@ class LoginFragment : Fragment() {
             } else {
                 toastIntroducirCampos()
             }
+            Log.i("LOGG", "registrarButton")
         }
         binding.accederButton.setOnClickListener {
             if (binding.emailEditText.text.isNotEmpty() && binding.paswordEditText.text.isNotEmpty()) {
@@ -81,12 +71,14 @@ class LoginFragment : Fragment() {
                         binding.paswordEditText.text.toString()
                     ).addOnCompleteListener {
                         if (it.isSuccessful) {
-                            navegarPrincipal(
-                                it.result.user?.email ?: "",
-                                PrincipalFragment.ProviderType.BASIC
-                            )
-                            val metadata = it.result.user?.metadata
+//                            navegarPrincipal(
+//                                it.result.user?.email ?: "",
+//                                PrincipalFragment.ProviderType.BASIC
+//                            )
 
+                            val email = it.result.user?.email ?: ""
+                            val photoURI = it.result.user?.photoUrl ?: ""
+                            navegarPrincipal(email, photoURI.toString())
                         } else {
                             showAlert()
                         }
@@ -99,14 +91,10 @@ class LoginFragment : Fragment() {
             val googleConf = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail().build()
-            val googleClient = GoogleSignIn.getClient(requireActivity(), googleConf)
+            val googleClient = GoogleSignIn.getClient(this, googleConf)
             googleClient.signOut()
-            activity?.startActivityFromFragment(this, googleClient.signInIntent, GOOGLE_SIG_IN)
+            startActivityForResult(googleClient.signInIntent, GOOGLE_SIG_IN)
         }
-    }
-
-    private fun toastIntroducirCampos() {
-        Toast.makeText(requireContext(), "Introduce los campos", Toast.LENGTH_SHORT).show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -119,7 +107,9 @@ class LoginFragment : Fragment() {
                     val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                     FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener{
                         if(it.isSuccessful) {
-                            navegarPrincipal(account.email ?: "", PrincipalFragment.ProviderType.GOOGLE)
+                            val email = it.result.user?.email ?: ""
+                            val photoURI = it.result.user?.photoUrl ?: ""
+                            navegarPrincipal(email, photoURI.toString())
                         } else {
                             showAlert()
                         }
@@ -131,8 +121,18 @@ class LoginFragment : Fragment() {
         }
     }
 
+    private fun navegarPrincipal(email: String, photoURI: String) {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra("email", email)
+            putExtra("photoUri", photoURI)
+        }
+        startActivity(intent)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        finish()
+    }
+
     private fun showAlert() {
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(this)
         builder.setTitle("Error")
         builder.setMessage("Se ha producido un error autentificando al usuario")
         builder.setPositiveButton("Aceptar", null)
@@ -140,17 +140,8 @@ class LoginFragment : Fragment() {
         dialog.show()
     }
 
-    private fun navegarPrincipal(email: String, provider: PrincipalFragment.ProviderType) {
-        findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToPrincipalFragment(email,
-            provider.toString()
-        ))
+    private fun toastIntroducirCampos() {
+        Toast.makeText(this, "Introduce los campos", Toast.LENGTH_SHORT).show()
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-
-        _binding = null
-    }
-
 
 }

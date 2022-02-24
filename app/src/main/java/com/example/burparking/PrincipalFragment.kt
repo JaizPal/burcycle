@@ -23,6 +23,7 @@ class PrincipalFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
     }
 
     override fun onCreateView(
@@ -30,7 +31,7 @@ class PrincipalFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentPrincipalBinding.inflate(inflater, container, false)
-        guardarInicioSesionUsuario()
+//        guardarInicioSesionUsuario()
         return binding.root
     }
 
