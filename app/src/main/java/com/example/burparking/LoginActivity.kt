@@ -1,21 +1,28 @@
 package com.example.burparking
 
+import android.app.ActivityOptions
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import android.view.Window
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.example.burparking.databinding.ActivityLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import java.util.jar.Manifest
 
 class LoginActivity : AppCompatActivity() {
 
@@ -23,14 +30,23 @@ class LoginActivity : AppCompatActivity() {
     private val GOOGLE_SIG_IN = 100
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
+        setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
+        window.sharedElementsUseOverlay = false
         super.onCreate(savedInstanceState)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        pedirPermisos()
         setup()
         session()
 
+    }
+
+    private fun pedirPermisos() {
+        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.INTERNET), 1000)
+        }
     }
 
     private fun session() {
@@ -45,7 +61,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setup() {
         binding.registrarButton.setOnClickListener {
-            if(binding.emailEditText.text.isNotEmpty() && binding.paswordEditText.text.isNotEmpty()) {
+            if(binding.emailEditText.text!!.isNotEmpty() && binding.paswordEditText.text!!.isNotEmpty()) {
                 FirebaseAuth.getInstance()
                     .createUserWithEmailAndPassword(binding.emailEditText.text.toString(),
                         binding.paswordEditText.text.toString()).addOnCompleteListener{
@@ -64,18 +80,13 @@ class LoginActivity : AppCompatActivity() {
             Log.i("LOGG", "registrarButton")
         }
         binding.accederButton.setOnClickListener {
-            if (binding.emailEditText.text.isNotEmpty() && binding.paswordEditText.text.isNotEmpty()) {
+            if (binding.emailEditText.text!!.isNotEmpty() && binding.paswordEditText.text!!.isNotEmpty()) {
                 FirebaseAuth.getInstance()
                     .signInWithEmailAndPassword(
                         binding.emailEditText.text.toString(),
                         binding.paswordEditText.text.toString()
                     ).addOnCompleteListener {
                         if (it.isSuccessful) {
-//                            navegarPrincipal(
-//                                it.result.user?.email ?: "",
-//                                PrincipalFragment.ProviderType.BASIC
-//                            )
-
                             val email = it.result.user?.email ?: ""
                             val photoURI = it.result.user?.photoUrl ?: ""
                             navegarPrincipal(email, photoURI.toString())
@@ -126,7 +137,9 @@ class LoginActivity : AppCompatActivity() {
             putExtra("email", email)
             putExtra("photoUri", photoURI)
         }
-        startActivity(intent)
+        val transicion = ActivityOptions.makeSceneTransitionAnimation(this, binding.accederButton,
+            "shared_element_container")
+        startActivity(intent, transicion.toBundle())
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         finish()
     }

@@ -31,20 +31,7 @@ class PrincipalFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentPrincipalBinding.inflate(inflater, container, false)
-//        guardarInicioSesionUsuario()
         return binding.root
-    }
-
-
-    private fun guardarInicioSesionUsuario() {
-        val argumentos : PrincipalFragmentArgs by navArgs()
-        val email = argumentos.email
-        val provider = argumentos.provider
-
-        val prefs = activity?.getSharedPreferences("inicioSesion", Context.MODE_PRIVATE)!!.edit()
-        prefs.putString("email", email)
-        prefs.putString("provider", provider)
-        prefs.apply()
     }
 
 }

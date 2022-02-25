@@ -2,9 +2,16 @@ package com.example.burparking
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import android.view.Window
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.drawToBitmap
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -12,6 +19,13 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import com.example.burparking.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.transition.platform.MaterialContainerTransform
+import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
+import com.squareup.picasso.Picasso
+import kotlinx.coroutines.delay
+import java.net.URI
+import java.net.URL
+import java.util.*
 
 /*
  TODO: Dependiendo en que fragmento estemos, habilitar el botón "cerrar sesión"
@@ -22,6 +36,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
+        findViewById<View>(android.R.id.content).transitionName = "shared_element_container"
+        setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
+        window.sharedElementEnterTransition = MaterialContainerTransform().apply {
+            addTarget(android.R.id.content)
+            duration = 300L
+        }
+        window.sharedElementReturnTransition = MaterialContainerTransform().apply {
+            addTarget(android.R.id.content)
+            duration = 1000L
+        }
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -34,13 +59,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         setSupportActionBar(binding.toolbar)
         val drawerLayout: DrawerLayout = binding.drawerLayout
-
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         NavigationUI.setupActionBarWithNavController(this, navController, binding.drawerLayout)
         NavigationUI.setupWithNavController(binding.navView, navController)
 
         navView.setNavigationItemSelectedListener(this)
+
+        val header = binding.navView.getHeaderView(0)
+        val imagen = header.findViewById<ImageView>(R.id.imagenUsuario)
+        val correo = header.findViewById<TextView>(R.id.textView)
+        correo.text = email.toString()
+        val imagenURL = Uri.parse(photoURI)
+        Picasso.get().load(imagenURL).into(imagen)
+
 
 //        setSupportActionBar(binding.toolbar)
 //
