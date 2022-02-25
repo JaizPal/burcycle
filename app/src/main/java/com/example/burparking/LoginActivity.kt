@@ -22,6 +22,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.ktx.Firebase
 import java.util.jar.Manifest
 
 class LoginActivity : AppCompatActivity() {
@@ -97,6 +98,7 @@ class LoginActivity : AppCompatActivity() {
             } else {
                 toastIntroducirCampos()
             }
+
         }
         binding.googleButton.setOnClickListener {
             val googleConf = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -106,6 +108,7 @@ class LoginActivity : AppCompatActivity() {
             googleClient.signOut()
             startActivityForResult(googleClient.signInIntent, GOOGLE_SIG_IN)
         }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

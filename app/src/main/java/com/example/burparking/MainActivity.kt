@@ -18,10 +18,13 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import com.example.burparking.databinding.ActivityMainBinding
+import com.firebase.ui.auth.AuthUI
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
+import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
+import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.coroutines.delay
 import java.net.URI
 import java.net.URL
@@ -56,7 +59,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val email = bundle?.getString("email")
         val photoURI = bundle?.getString("photoUri")
         guardarDatosUsuario(email.toString(), photoURI.toString())
-
+        setAvatarCorreo(photoURI, email)
         setSupportActionBar(binding.toolbar)
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
@@ -66,12 +69,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         navView.setNavigationItemSelectedListener(this)
 
-        val header = binding.navView.getHeaderView(0)
-        val imagen = header.findViewById<ImageView>(R.id.imagenUsuario)
-        val correo = header.findViewById<TextView>(R.id.textView)
-        correo.text = email.toString()
-        val imagenURL = Uri.parse(photoURI)
-        Picasso.get().load(imagenURL).into(imagen)
+
 
 
 //        setSupportActionBar(binding.toolbar)
@@ -81,6 +79,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //        setupActionBarWithNavController(navController, appBarConfiguration)
 
     }
+
 
 
 
@@ -94,6 +93,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         prefs.putString("email", email)
         prefs.putString("photoURI", photoURI)
         prefs.apply()
+    }
+
+    private fun setAvatarCorreo(photoURI: String?, email: String?) {
+        val header = binding.navView.getHeaderView(0)
+        val imagen = header.findViewById<ImageView>(R.id.imagenUsuario)
+        val correo = header.findViewById<TextView>(R.id.textView)
+        correo.text = email.toString()
+        val imagenURL = Uri.parse(photoURI)
+        Picasso.get().load(imagenURL).resize(220,220).transform(CropCircleTransformation()).into(imagen)
+
     }
 
 //    override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -127,6 +136,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun navegarLogin(){
         val intent = Intent(this, LoginActivity::class.java).apply {  }
+        AuthUI.getInstance().signOut(this)
         startActivity(intent)
     }
 

@@ -70,8 +70,11 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:21.0.1'
     implementation 'com.google.android.gms:play-services-auth:20.1.0'
     implementation 'com.google.firebase:firebase-core:20.1.0'
+    implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
 
 
     // Picaso
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'jp.wasabeef:picasso-transformations:2.4.0'
+
 }
