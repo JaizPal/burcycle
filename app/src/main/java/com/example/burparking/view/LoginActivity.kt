@@ -55,9 +55,9 @@ class LoginActivity : AppCompatActivity() {
     private fun setup() {
 
         binding.registrarButton.setOnClickListener {
-            var email = binding.emailEditText.text.toString().trim().lowercase()
-            val password = binding.paswordEditText.toString().trim()
-            if(email.isNotEmpty() && password.isNotEmpty()) {
+            if(comprobarCampos()) {
+                var email = binding.emailEditText.text.toString().trim().lowercase()
+                val password = binding.paswordEditText.toString().trim()
                 FirebaseAuth.getInstance()
                     .createUserWithEmailAndPassword(email,
                         password).addOnCompleteListener{
@@ -69,15 +69,10 @@ class LoginActivity : AppCompatActivity() {
                             showAlert()
                         }
                     }
-            } else {
-                toastIntroducirCampos()
             }
-            Log.i("LOGG", "registrarButton")
         }
         binding.accederButton.setOnClickListener {
-            var email = binding.emailEditText.text.toString().trim().lowercase()
-            val password = binding.paswordEditText.toString().trim()
-            if (email.isNotEmpty() && password.isNotEmpty()) {
+            if (comprobarCampos()) {
                 var email = binding.emailEditText.text.toString().trim().lowercase()
                 val password = binding.paswordEditText.toString().trim()
                 FirebaseAuth.getInstance()
@@ -93,8 +88,6 @@ class LoginActivity : AppCompatActivity() {
                             showAlert()
                         }
                     }
-            } else {
-                toastIntroducirCampos()
             }
 
         }
@@ -133,6 +126,34 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun comprobarCampos(): Boolean {
+        var emailCompletado = false
+        var passwordCompletado = false
+        val emailLayout = binding.emailLayout
+        val email = binding.emailEditText.text
+        val passwordLayout = binding.passwordLayout
+        val password = binding.paswordEditText.text
+
+        if(email.isNullOrEmpty()) {
+            emailLayout.error = "Campo obligatorio"
+
+        } else if(!email.contains("@")) {
+            emailLayout.error = "Correo no válido"
+        } else {
+            emailLayout.error = null
+            emailCompletado = true
+        }
+        if(password.isNullOrEmpty()) {
+            passwordLayout.error = "Campo obligatorio"
+        } else if (password.length < 5) {
+            passwordLayout.error = "La contraseña debe contener al menos 5 caracteres"
+        } else {
+            passwordLayout.error = null
+            passwordCompletado = true
+        }
+        return emailCompletado && passwordCompletado
+    }
+
     private fun navegarPrincipal(email: String, photoURI: String) {
         val intent = Intent(this, MainActivity::class.java).apply {
             putExtra("email", email)
@@ -151,9 +172,4 @@ class LoginActivity : AppCompatActivity() {
         val dialog : AlertDialog = builder.create()
         dialog.show()
     }
-
-    private fun toastIntroducirCampos() {
-        Toast.makeText(this, "Introduce los campos", Toast.LENGTH_SHORT).show()
-    }
-
 }
