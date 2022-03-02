@@ -1,34 +1,27 @@
-package com.example.burparking
+package com.example.burparking.view
 
+import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
-import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.drawToBitmap
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.navigateUp
+import com.example.burparking.R
 import com.example.burparking.databinding.ActivityMainBinding
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.transition.platform.MaterialContainerTransform
-import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
-import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
-import kotlinx.coroutines.delay
-import java.net.URI
-import java.net.URL
-import java.util.*
 
 /*
  TODO: Dependiendo en que fragmento estemos, habilitar el botón "cerrar sesión"
@@ -39,17 +32,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
-        findViewById<View>(android.R.id.content).transitionName = "shared_element_container"
-        setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
-        window.sharedElementEnterTransition = MaterialContainerTransform().apply {
-            addTarget(android.R.id.content)
-            duration = 300L
-        }
-        window.sharedElementReturnTransition = MaterialContainerTransform().apply {
-            addTarget(android.R.id.content)
-            duration = 1000L
-        }
+
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -138,6 +121,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val intent = Intent(this, LoginActivity::class.java).apply {  }
         AuthUI.getInstance().signOut(this)
         startActivity(intent)
+        finish()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

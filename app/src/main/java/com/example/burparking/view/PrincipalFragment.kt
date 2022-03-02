@@ -1,4 +1,4 @@
-package com.example.burparking
+package com.example.burparking.view
 
 import android.content.Context
 import android.os.Bundle

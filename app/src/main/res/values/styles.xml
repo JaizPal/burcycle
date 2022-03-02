@@ -4,4 +4,21 @@
         <item name="backgroundTint">#EBEBEB</item>
         <item name="android:textColor">#353535</item>
     </style>
+
+    <style name="MyMaterialTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- Your custom ActionBar Style -->
+
+    <style name="CustomActionBar" parent="@style/MyMaterialTheme.Base">
+        <item name="android:windowActionBarOverlay">true</item>
+        <!-- Support library compatibility -->
+        <item name="windowActionBarOverlay">true</item>
+    </style>
+
 </resources>
