@@ -9,7 +9,7 @@ import com.example.burparking.data.database.entities.ParkingEntity
 @Dao
 interface ParkingDao {
 
-    @Query("SELECT * FROM parking_table order by id")
+    @Query("SELECT * FROM parking_table order by id LIMIT 15000")
     suspend fun getAllParkings(): List<ParkingEntity>
 
 //    @Query("SELECT * FROM parking_table WHERE ID = :idParking")

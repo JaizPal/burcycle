@@ -1,4 +1,4 @@
-package com.example.burparking.data.model
+package com.example.burparking.data.model.parking
 
 data class ParkingModel(
     val id: Long,

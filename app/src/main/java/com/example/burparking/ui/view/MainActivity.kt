@@ -18,9 +18,10 @@ import com.firebase.ui.auth.AuthUI
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration

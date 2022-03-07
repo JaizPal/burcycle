@@ -1,4 +1,4 @@
-package com.example.burparking.data.model
+package com.example.burparking.data.model.parking
 
 import com.google.gson.annotations.SerializedName
 

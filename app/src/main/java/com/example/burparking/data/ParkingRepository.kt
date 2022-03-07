@@ -7,16 +7,19 @@ import com.example.burparking.domain.model.Parking
 import com.example.burparking.domain.model.toDomain
 import javax.inject.Inject
 
-class ParkingRepository @Inject constructor(private val api: ParkingService, private val parkingDao: ParkingDao){
+class ParkingRepository @Inject constructor(
+    private val api: ParkingService,
+    private val parkingDao: ParkingDao
+) {
 
     suspend fun getAllParkingsFromApi(): List<Parking> {
         val response = api.getparkings().parkings
-        return response.map{it.toDomain()}
+        return response.map { it.toDomain() }
     }
 
     suspend fun getAllParkingsFromDatabase(): List<Parking> {
         val response = parkingDao.getAllParkings()
-        return response.map {it.toDomain()}
+        return response.map { it.toDomain() }
     }
 
     suspend fun insertParkings(parkings: List<ParkingEntity>) {

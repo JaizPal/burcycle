@@ -15,5 +15,13 @@
         <argument
             android:name="provider"
             app:argType="string" />
+        <action
+            android:id="@+id/action_principalFragment_to_buscarDireccionFragment"
+            app:destination="@id/buscarDireccionFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/buscarDireccionFragment"
+        android:name="com.example.burparking.ui.view.BuscarDireccionFragment"
+        android:label="fragment_buscar_direccion"
+        tools:layout="@layout/fragment_buscar_direccion" />
 </navigation>

@@ -60,14 +60,8 @@ class LoginActivity : AppCompatActivity() {
                         password
                     ).addOnCompleteListener {
                         if (it.isSuccessful) {
-                            email = it.result.user?.email ?: ""
-                            val photoURI = it.result.user?.photoUrl ?: ""
-                            //AuthUI.getInstance().signOut(this)
                             FirebaseAuth.getInstance().currentUser?.sendEmailVerification()
-                            //navegarPrincipal(email, photoURI.toString())
                             mostrarSnackBar("Se ha enviado un email de confirmación a su correo")
-//                            binding.tvConfirmarEmail.text = "Se ha enviado un email de confirmación a su correo"
-                            Log.i("Algo", password)
                         } else {
                             showAlert()
                         }
@@ -95,8 +89,6 @@ class LoginActivity : AppCompatActivity() {
                             //AuthUI.getInstance().signOut(this)
 
                         } else {
-                            Log.i("Algo", it.exception.toString())
-                            Log.i("Algo", password)
                             showAlert()
                         }
                     }

@@ -1,6 +1,6 @@
 package com.example.burparking.data.network
 
-import com.example.burparking.data.model.ParkingElementModel
+import com.example.burparking.data.model.parking.ParkingElementModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

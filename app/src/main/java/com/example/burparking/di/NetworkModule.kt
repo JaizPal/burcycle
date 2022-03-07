@@ -1,5 +1,6 @@
 package com.example.burparking.di
 
+import com.example.burparking.data.network.DireccionApiClient
 import com.example.burparking.data.network.ParkingApiClient
 import dagger.Module
 import dagger.Provides
@@ -26,5 +27,11 @@ object NetworkModule {
     @Provides
     fun provideParkingApiClient(retrofit: Retrofit): ParkingApiClient {
         return retrofit.create(ParkingApiClient::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDireccionApiClient(retrofit: Retrofit): DireccionApiClient {
+        return retrofit.create(DireccionApiClient::class.java)
     }
 }

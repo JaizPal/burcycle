@@ -1,6 +1,6 @@
 package com.example.burparking.data.network
 
-import com.example.burparking.data.model.ParkingElementModel
+import com.example.burparking.data.model.parking.ParkingElementModel
 import retrofit2.Response
 import retrofit2.http.GET
 

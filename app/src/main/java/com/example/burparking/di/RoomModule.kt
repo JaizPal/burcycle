@@ -24,4 +24,8 @@ object RoomModule {
     @Singleton
     @Provides
     fun providesParkingDao(db:BurparkingDatabase) = db.getParkingDao()
+
+    @Singleton
+    @Provides
+    fun providesDireccionDao(db:BurparkingDatabase) = db.getDireccionDao()
 }
