@@ -17,9 +17,11 @@ import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
@@ -63,7 +65,8 @@ class LoginActivity : AppCompatActivity() {
                             //AuthUI.getInstance().signOut(this)
                             FirebaseAuth.getInstance().currentUser?.sendEmailVerification()
                             //navegarPrincipal(email, photoURI.toString())
-                            binding.tvConfirmarEmail.text = "Se ha enviado un email de confirmación a su correo"
+                            mostrarSnackBar("Se ha enviado un email de confirmación a su correo")
+//                            binding.tvConfirmarEmail.text = "Se ha enviado un email de confirmación a su correo"
                             Log.i("Algo", password)
                         } else {
                             showAlert()
@@ -108,6 +111,14 @@ class LoginActivity : AppCompatActivity() {
             googleClient.signOut()
             startActivityForResult(googleClient.signInIntent, GOOGLE_SIG_IN)
         }
+    }
+
+    private fun mostrarSnackBar(mensaje: String) {
+        Snackbar.make(
+            this.findViewById(android.R.id.content),
+            mensaje,
+            Snackbar.LENGTH_INDEFINITE
+        ).show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
