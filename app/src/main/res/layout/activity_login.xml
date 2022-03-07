@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.LoginActivity">
+    tools:context=".ui.view.LoginActivity">
 
     <LinearLayout
         android:id="@+id/inicioLayout"
@@ -64,6 +64,12 @@
                 android:hint="contraseña"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tvConfirmarEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/errorColor" />
 
         <Space
             android:layout_width="match_parent"

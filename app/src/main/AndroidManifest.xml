@@ -4,6 +4,7 @@
     package="com.example.burparking">
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
+        android:name=".BurparkingApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -13,7 +14,7 @@
         android:noHistory = "true"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".view.LoginActivity"
+            android:name="com.example.burparking.ui.view.LoginActivity"
             android:exported="true"
             android:label="@string/title_activity_login"
             android:theme="@style/Theme.Burparking.NoActionBar" >
@@ -23,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.MainActivity"
+            android:name="com.example.burparking.ui.view.MainActivity"
             android:exported="false"
             android:label="@string/app_name"
             android:theme="@style/Theme.Burparking.NoActionBar">

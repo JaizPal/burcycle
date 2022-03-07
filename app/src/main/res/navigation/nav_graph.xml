@@ -6,7 +6,7 @@
     app:startDestination="@id/principalFragment">
     <fragment
         android:id="@+id/principalFragment"
-        android:name="com.example.burparking.view.PrincipalFragment"
+        android:name="com.example.burparking.ui.view.PrincipalFragment"
         android:label="fragment_principal"
         tools:layout="@layout/fragment_principal" >
         <argument

@@ -1,25 +1,27 @@
-package com.example.burparking.view
+package com.example.burparking.ui.view
 
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.AttributeSet
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.burparking.R
 import com.example.burparking.databinding.ActivityLoginBinding
+import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
@@ -30,16 +32,8 @@ class LoginActivity : AppCompatActivity() {
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        pedirPermisos()
-        setup()
         session()
-
-    }
-
-    private fun pedirPermisos() {
-        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.INTERNET), 1000)
-        }
+        setup()
     }
 
     private fun session() {
@@ -55,16 +49,22 @@ class LoginActivity : AppCompatActivity() {
     private fun setup() {
 
         binding.registrarButton.setOnClickListener {
-            if(comprobarCampos()) {
+            if (comprobarCampos()) {
                 var email = binding.emailEditText.text.toString().trim().lowercase()
-                val password = binding.paswordEditText.toString().trim()
+                val password = binding.paswordEditText.text.toString().trim()
                 FirebaseAuth.getInstance()
-                    .createUserWithEmailAndPassword(email,
-                        password).addOnCompleteListener{
+                    .createUserWithEmailAndPassword(
+                        email,
+                        password
+                    ).addOnCompleteListener {
                         if (it.isSuccessful) {
                             email = it.result.user?.email ?: ""
                             val photoURI = it.result.user?.photoUrl ?: ""
-                            navegarPrincipal(email, photoURI.toString())
+                            //AuthUI.getInstance().signOut(this)
+                            FirebaseAuth.getInstance().currentUser?.sendEmailVerification()
+                            //navegarPrincipal(email, photoURI.toString())
+                            binding.tvConfirmarEmail.text = "Se ha enviado un email de confirmación a su correo"
+                            Log.i("Algo", password)
                         } else {
                             showAlert()
                         }
@@ -73,8 +73,9 @@ class LoginActivity : AppCompatActivity() {
         }
         binding.accederButton.setOnClickListener {
             if (comprobarCampos()) {
+                FirebaseAuth.getInstance().signOut()
                 var email = binding.emailEditText.text.toString().trim().lowercase()
-                val password = binding.paswordEditText.toString().trim()
+                val password = binding.paswordEditText.text.toString().trim()
                 FirebaseAuth.getInstance()
                     .signInWithEmailAndPassword(
                         email,
@@ -83,8 +84,16 @@ class LoginActivity : AppCompatActivity() {
                         if (it.isSuccessful) {
                             email = it.result.user?.email ?: ""
                             val photoURI = it.result.user?.photoUrl ?: ""
-                            navegarPrincipal(email, photoURI.toString())
+                            if(FirebaseAuth.getInstance().currentUser?.isEmailVerified!!) {
+                                navegarPrincipal(email, photoURI.toString())
+                            } else {
+                                binding.tvConfirmarEmail.text = "Confirme la verificación del correo electrónico"
+                            }
+                            //AuthUI.getInstance().signOut(this)
+
                         } else {
+                            Log.i("Algo", it.exception.toString())
+                            Log.i("Algo", password)
                             showAlert()
                         }
                     }
@@ -99,26 +108,26 @@ class LoginActivity : AppCompatActivity() {
             googleClient.signOut()
             startActivityForResult(googleClient.signInIntent, GOOGLE_SIG_IN)
         }
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == GOOGLE_SIG_IN) {
-            val task  = GoogleSignIn.getSignedInAccountFromIntent(data)
+        if (requestCode == GOOGLE_SIG_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)
                 if (account != null) {
                     val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-                    FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener{
-                        if(it.isSuccessful) {
-                            val email = it.result.user?.email ?: ""
-                            val photoURI = it.result.user?.photoUrl ?: ""
-                            navegarPrincipal(email, photoURI.toString())
-                        } else {
-                            showAlert()
+                    FirebaseAuth.getInstance().signInWithCredential(credential)
+                        .addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                val email = it.result.user?.email ?: ""
+                                val photoURI = it.result.user?.photoUrl ?: ""
+                                navegarPrincipal(email, photoURI.toString())
+                            } else {
+                                showAlert()
+                            }
                         }
-                    }
                 }
             } catch (e: ApiException) {
                 showAlert()
@@ -134,16 +143,16 @@ class LoginActivity : AppCompatActivity() {
         val passwordLayout = binding.passwordLayout
         val password = binding.paswordEditText.text
 
-        if(email.isNullOrEmpty()) {
+        if (email.isNullOrEmpty()) {
             emailLayout.error = "Campo obligatorio"
 
-        } else if(!email.contains("@")) {
+        } else if (!email.contains("@")) {
             emailLayout.error = "Correo no válido"
         } else {
             emailLayout.error = null
             emailCompletado = true
         }
-        if(password.isNullOrEmpty()) {
+        if (password.isNullOrEmpty()) {
             passwordLayout.error = "Campo obligatorio"
         } else if (password.length < 5) {
             passwordLayout.error = "La contraseña debe contener al menos 5 caracteres"
@@ -169,7 +178,7 @@ class LoginActivity : AppCompatActivity() {
         builder.setTitle("Error")
         builder.setMessage("Se ha producido un error autentificando al usuario")
         builder.setPositiveButton("Aceptar", null)
-        val dialog : AlertDialog = builder.create()
+        val dialog: AlertDialog = builder.create()
         dialog.show()
     }
 }

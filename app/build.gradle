@@ -14,6 +14,8 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id("androidx.navigation.safeargs")
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
 apply plugin: 'com.android.application'
@@ -21,12 +23,12 @@ apply plugin: 'com.google.gms.google-services'
 googleServices.disableVersionCheck = true
 
 android {
-    compileSdk 32
+    compileSdk 31
 
     defaultConfig {
         applicationId "com.example.burparking"
         minSdk 21
-        targetSdk 32
+        targetSdk 31
         versionCode 1
         versionName "1.0"
 
@@ -76,6 +78,26 @@ dependencies {
     // Picaso
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'jp.wasabeef:picasso-transformations:2.4.0'
+
+    // Fragment
+    implementation "androidx.fragment:fragment-ktx:1.4.1"
+    // Activity
+    implementation "androidx.activity:activity-ktx:1.4.0"
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    //Corrutinas
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
+    //dagger hilt
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+    //Room
+    implementation "androidx.room:room-ktx:2.4.2"
+    kapt "androidx.room:room-compiler:2.4.2"
 
 
 }

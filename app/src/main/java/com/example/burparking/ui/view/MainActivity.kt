@@ -1,12 +1,8 @@
-package com.example.burparking.view
+package com.example.burparking.ui.view
 
-import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ImageView
@@ -20,12 +16,11 @@ import com.example.burparking.R
 import com.example.burparking.databinding.ActivityMainBinding
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 
-/*
- TODO: Dependiendo en que fragmento estemos, habilitar el botón "cerrar sesión"
- */
+
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -37,7 +32,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         val bundle = intent.extras
         val email = bundle?.getString("email")
         val photoURI = bundle?.getString("photoUri")
