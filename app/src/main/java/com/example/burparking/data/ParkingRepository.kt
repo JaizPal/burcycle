@@ -22,6 +22,11 @@ class ParkingRepository @Inject constructor(
         return response.map { it.toDomain() }
     }
 
+    suspend fun getClosestParkingFromApi(lat: Double, lon: Double): List<Parking> {
+        val response = api.getClosestParkings(lat, lon).parkings
+        return response.map {it.toDomain()}
+    }
+
     suspend fun insertParkings(parkings: List<ParkingEntity>) {
         parkingDao.insertAll(parkings)
     }

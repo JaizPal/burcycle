@@ -68,7 +68,7 @@
         <TextView
             android:id="@+id/tvConfirmarEmail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="34dp"
             android:textColor="@color/errorColor" />
 
         <Space

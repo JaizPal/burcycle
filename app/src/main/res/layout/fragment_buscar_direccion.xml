@@ -11,14 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:completionThreshold="5"
-        android:hint="Dirección"
-        android:textColorHint="#757575" />
-
-    <Button
-        android:id="@+id/buscarButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Buscar" />
+        android:hint="@string/a_donde_quieres_ir"
+        android:textColorHint="#757575"
+        android:lines="1">
+        <requestFocus/>
+    </AutoCompleteTextView>
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -26,5 +23,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tvUbicacionActual"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableStart="@android:drawable/ic_menu_mylocation"
+        android:gravity="center_vertical"
+        android:text="Ubicación actual"
+        android:textSize="18sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewParking"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

@@ -12,8 +12,8 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="495dp"
-            android:layout_height="251dp"
+            android:layout_width="0dp"
+            android:layout_height="250dp"
             android:src="@drawable/fondo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -25,11 +25,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:editable="false"
-            android:hint="@string/direcci_n"
+            android:hint="@string/a_donde_quieres_ir"
             android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            tools:ignore="TextContrastCheck" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
