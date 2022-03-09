@@ -2,6 +2,8 @@ package com.example.burparking.ui.view
 
 import android.content.Context
 import android.os.Bundle
+import android.transition.AutoTransition
+import android.transition.TransitionManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -18,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.burparking.R
 import com.example.burparking.databinding.FragmentBuscarDireccionBinding
+import com.example.burparking.databinding.ItemParkingBinding
 import com.example.burparking.domain.model.Direccion
 import com.example.burparking.domain.model.Parking
 import com.example.burparking.ui.view.adapter.ParkingAdapter
@@ -73,7 +77,6 @@ class BuscarDireccionFragment : Fragment() {
 
         buscarDireccionViewModel.closestParkings.observe(requireActivity(), Observer {
             if (it != null) {
-                binding.tvUbicacionActual.text = it.size.toString()
                 cargarCardsParkings()
             }
         })
@@ -86,5 +89,9 @@ class BuscarDireccionFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = ParkingAdapter(buscarDireccionViewModel.closestParkings.value!!)
     }
+
+
+
+
 
 }

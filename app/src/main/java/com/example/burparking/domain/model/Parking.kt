@@ -7,7 +7,10 @@ data class Parking(
     val id: Long,
     val lat: Double,
     val lon: Double,
-    val capacidad: Int
+    val capacidad: Int,
+    var numero: String?,
+    var calle: String?,
+    var distancia: Float?
 ) {
     override fun toString(): String {
         return super.toString()
@@ -16,5 +19,5 @@ data class Parking(
 
 
 
-fun ParkingModel.toDomain() = Parking(id, lat, lon, tags.capacidad)
-fun ParkingEntity.toDomain() = Parking(id, lat, lon, capacidad)
+fun ParkingModel.toDomain() = Parking(id, lat, lon, tags.capacidad, null, null, null)
+fun ParkingEntity.toDomain() = Parking(id, lat, lon, capacidad, null, null, null)

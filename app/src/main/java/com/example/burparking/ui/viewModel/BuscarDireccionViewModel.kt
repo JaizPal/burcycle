@@ -1,5 +1,6 @@
 package com.example.burparking.ui.viewModel
 
+import android.location.Location
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -32,7 +33,17 @@ class BuscarDireccionViewModel @Inject constructor(
 
     fun buscarParkings(direccion: Direccion) {
         viewModelScope.launch {
+            isLoading.postValue(true)
             closestParkings.value = getClosestParkingsUseCase(direccion.lat, direccion.lon)
+            isLoading.postValue(false)
+            closestParkings.value?.forEach { p -> establecerDistancia(direccion, p) }
+            closestParkings.postValue(closestParkings.value?.sortedBy { it.distancia })
         }
+    }
+
+    fun establecerDistancia(direccion: Direccion, parking: Parking) {
+        val distancia: FloatArray = floatArrayOf(0f)
+        Location.distanceBetween(direccion.lat, direccion.lon, parking.lat, parking.lon, distancia)
+        parking.distancia = distancia[0]
     }
 }

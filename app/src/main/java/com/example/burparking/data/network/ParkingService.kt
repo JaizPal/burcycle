@@ -17,7 +17,7 @@ class ParkingService @Inject constructor(private val api: ParkingApiClient) {
     suspend fun getClosestParkings(lat: Double, lon: Double): ParkingElementModel {
         return withContext(Dispatchers.IO) {
             val response =
-                api.getClosestParkings("[out:json];node[amenity=bicycle_parking](around:700,$lat,$lon);out;")
+                api.getClosestParkings("[out:json][timeout:60];node[amenity=bicycle_parking](around:200,$lat,$lon);out;")
             response.body() ?: ParkingElementModel(listOf())
         }
     }

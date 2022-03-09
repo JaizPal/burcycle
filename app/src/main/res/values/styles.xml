@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="googleButton">
-        <item name="backgroundTint">#EBEBEB</item>
+        <item name="backgroundTint">@color/fondoGoogle</item>
         <item name="android:textColor">#353535</item>
+    </style>
+
+    <style name="card" parent="CardView">
+        <item name="cardBackgroundColor">@color/fondoGoogle</item>
+        <item name="android:textColor">@color/texto</item>
+        <item name="cardElevation">10dp</item>
+        <item name="cardCornerRadius">10dp</item>
     </style>
 
     <style name="MyMaterialTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
