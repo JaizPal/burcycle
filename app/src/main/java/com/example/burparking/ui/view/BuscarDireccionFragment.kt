@@ -72,14 +72,18 @@ class BuscarDireccionFragment : Fragment() {
         })
 
         autoCompletado.setOnItemClickListener { parent, view, position, id ->
-            buscarDireccionViewModel.buscarParkings(adapterDirecciones.getItem(position)!!)
+            //buscarDireccionViewModel.buscarParkings(adapterDirecciones.getItem(position)!!)
+            buscarDireccionViewModel.parkingCercanos(adapterDirecciones.getItem(position)!!)
+            cargarCardsParkings()
         }
 
-        buscarDireccionViewModel.closestParkings.observe(requireActivity(), Observer {
-            if (it != null) {
-                cargarCardsParkings()
-            }
-        })
+
+
+//        buscarDireccionViewModel.closestParkings.observe(requireActivity(), Observer {
+//            if (it != null) {
+//                cargarCardsParkings()
+//            }
+//        })
 
         return binding.root
     }
@@ -87,7 +91,8 @@ class BuscarDireccionFragment : Fragment() {
     fun cargarCardsParkings() {
         val recyclerView = requireActivity().findViewById<RecyclerView>(R.id.recyclerViewParking)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = ParkingAdapter(buscarDireccionViewModel.closestParkings.value!!)
+        recyclerView.adapter = ParkingAdapter(buscarDireccionViewModel.parkings.value!!)
+//        recyclerView.adapter = ParkingAdapter(buscarDireccionViewModel.closestParkings.value!!)
     }
 
 
