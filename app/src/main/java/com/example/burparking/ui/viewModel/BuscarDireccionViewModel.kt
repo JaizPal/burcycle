@@ -1,11 +1,14 @@
 package com.example.burparking.ui.viewModel
 
 import android.location.Location
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.burparking.data.model.reversedireccion.ReverseDireccionModel
 import com.example.burparking.domain.model.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -13,7 +16,8 @@ import javax.inject.Inject
 class BuscarDireccionViewModel @Inject constructor(
     private val getDireccionesUserCase: GetAllDireccionesUseCase,
     private val getClosestParkingsUseCase: GetClosestParkingsUseCase,
-    private val getAllParkingsUseCase: GetAllParkingsUseCase
+    private val getAllParkingsUseCase: GetAllParkingsUseCase,
+    private val getReverseDireccionUseCase: GetReverseDireccionUseCase
 ) :
     ViewModel() {
 
@@ -21,8 +25,11 @@ class BuscarDireccionViewModel @Inject constructor(
     val closestParkings = MutableLiveData<List<Parking>>()
     val parkings = MutableLiveData<List<Parking>>()
     val isLoading = MutableLiveData<Boolean>()
+    var parkingCargados = MutableLiveData<Boolean>()
+    var reverseDireccion = MutableLiveData<ReverseDireccionModel>()
 
     fun onCreate() {
+        parkingCargados.value = false
         viewModelScope.launch {
             isLoading.postValue(true)
             direcciones.value = getDireccionesUserCase()!!
@@ -38,13 +45,16 @@ class BuscarDireccionViewModel @Inject constructor(
 
     fun parkingCercanos(direccion: Direccion) {
         viewModelScope.launch {
-            isLoading.postValue(true)
+            var cacheParkingsCercanos: List<Parking>? = null
+            isLoading.value = true
             parkings.value?.forEach { p -> establecerDistancia(direccion, p) }
             parkings.value = parkings.value?.sortedBy { it.distancia }
-            if(parkings.value?.size!! >= 10) {
-                parkings.value = parkings.value?.take(10)
+            if (parkings.value?.size!! >= 10) {
+                cacheParkingsCercanos = parkings.value?.take(10)
             }
-            isLoading.postValue(false)
+            cacheParkingsCercanos?.forEach { p -> establecerDireccion(p) }
+            closestParkings.value = cacheParkingsCercanos!!
+            isLoading.value = false
         }
     }
 
@@ -62,5 +72,27 @@ class BuscarDireccionViewModel @Inject constructor(
         val distancia: FloatArray = floatArrayOf(0f)
         Location.distanceBetween(direccion.lat, direccion.lon, parking.lat, parking.lon, distancia)
         parking.distancia = distancia[0]
+    }
+
+    fun establecerDireccion(parking: Parking) {
+        parkingCargados.value = false
+        viewModelScope.launch {
+            val reverseDireccion = getReverseDireccionUseCase(parking.lon, parking.lat)
+            parking.direccion = Direccion(
+                reverseDireccion.id,
+                parking.lat,
+                parking.lon,
+                reverseDireccion.numero,
+                reverseDireccion.calle,
+                reverseDireccion.codigoPostal
+            )
+            parkingCargados.value = true
+        }
+    }
+
+    fun getReverseDireccion(parking: Parking) {
+        viewModelScope.launch {
+           reverseDireccion.value  = getReverseDireccionUseCase(parking.lon, parking.lat)!!
+        }
     }
 }

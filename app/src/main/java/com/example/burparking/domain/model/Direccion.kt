@@ -2,6 +2,7 @@ package com.example.burparking.domain.model
 
 import com.example.burparking.data.database.entities.DireccionEntity
 import com.example.burparking.data.model.direccion.DireccionModel
+import com.example.burparking.data.model.reversedireccion.ReverseDireccionModel
 
 data class Direccion(
     val id: Long,
