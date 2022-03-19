@@ -46,7 +46,7 @@ class BuscarDireccionViewModel @Inject constructor(
     fun parkingCercanos(direccion: Direccion) {
         viewModelScope.launch {
             var cacheParkingsCercanos: List<Parking>? = null
-            isLoading.value = true
+            isLoading.postValue(true)
             parkings.value?.forEach { p -> establecerDistancia(direccion, p) }
             parkings.value = parkings.value?.sortedBy { it.distancia }
             if (parkings.value?.size!! >= 10) {
@@ -54,7 +54,7 @@ class BuscarDireccionViewModel @Inject constructor(
             }
             cacheParkingsCercanos?.forEach { p -> establecerDireccion(p) }
             closestParkings.value = cacheParkingsCercanos!!
-            isLoading.value = false
+            isLoading.postValue(false)
         }
     }
 
@@ -77,6 +77,7 @@ class BuscarDireccionViewModel @Inject constructor(
     fun establecerDireccion(parking: Parking) {
         parkingCargados.value = false
         viewModelScope.launch {
+            isLoading.postValue(true)
             val reverseDireccion = getReverseDireccionUseCase(parking.lon, parking.lat)
             parking.direccion = Direccion(
                 reverseDireccion.id,
@@ -86,13 +87,19 @@ class BuscarDireccionViewModel @Inject constructor(
                 reverseDireccion.calle,
                 reverseDireccion.codigoPostal
             )
+            if(parking.direccion!!.calle.isNullOrEmpty() || parking.direccion!!.numero.isNullOrEmpty()) {
+                parking.direccion!!.calle = reverseDireccion.name
+            }
             parkingCargados.value = true
+            isLoading.postValue(false)
         }
     }
 
     fun getReverseDireccion(parking: Parking) {
         viewModelScope.launch {
+            isLoading.postValue(true)
            reverseDireccion.value  = getReverseDireccionUseCase(parking.lon, parking.lat)!!
+            isLoading.postValue(false)
         }
     }
 }

@@ -2,12 +2,12 @@ package com.example.burparking.ui.view
 
 import android.Manifest.permission.*
 import android.annotation.SuppressLint
-import android.app.PendingIntent
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +29,6 @@ import com.example.burparking.ui.viewModel.BuscarDireccionViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -62,21 +61,26 @@ class BuscarDireccionFragment : Fragment() {
         verificarPermisos()
 
         val autoCompletado = binding.autoCompleteDirecciones
-        buscarDireccionViewModel.isLoading.observe(requireActivity(), Observer {
+        buscarDireccionViewModel.isLoading.observe(requireActivity()) {
             binding.progressBar.isVisible = it
-        })
+        }
 
-        buscarDireccionViewModel.direcciones.observe(requireActivity(), Observer {
+        buscarDireccionViewModel.direcciones.observe(requireActivity()) {
             if (it != null) {
                 adapterDirecciones = ArrayAdapter<Direccion>(
                     requireActivity(),
                     android.R.layout.simple_dropdown_item_1line,
                     buscarDireccionViewModel.direcciones.value!!.toList()
                 )
-
+                Log.i("Algo", buscarDireccionViewModel.direcciones.value!!.size.toString())
+                Log.i("Algo", buscarDireccionViewModel.direcciones.value!![1].toString())
+                Log.i("Algo", buscarDireccionViewModel.direcciones.value!![2].toString())
+                Log.i("Algo", buscarDireccionViewModel.direcciones.value!![123].toString())
+                Log.i("Algo", buscarDireccionViewModel.direcciones.value!![200].toString())
+                Log.i("Algo", buscarDireccionViewModel.direcciones.value!![20].toString())
                 autoCompletado.setAdapter(adapterDirecciones)
             }
-        })
+        }
 
         autoCompletado.setOnItemClickListener { parent, view, position, id ->
             buscarDireccionViewModel.parkingCercanos(adapterDirecciones.getItem(position)!!)
@@ -91,27 +95,49 @@ class BuscarDireccionFragment : Fragment() {
 
         binding.tvUbicacionActual.setOnClickListener {
             if (permisosConcedidos) {
-                if(localizacionActivada()) {
-                    localizacionUsuario = LocationServices.getFusedLocationProviderClient(requireActivity())
-                    localizacionUsuario.getCurrentLocation(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY, CancellationTokenSource().token).addOnSuccessListener {
-                        buscarDireccionViewModel.parkingCercanos(Direccion(0, it.latitude, it.longitude, null, null, null))
-                        buscarDireccionViewModel.getReverseDireccion(Parking(0, it.latitude, it.longitude, 0, null, null, null, null))
+                if (localizacionActivada()) {
+                    localizacionUsuario =
+                        LocationServices.getFusedLocationProviderClient(requireActivity())
+                    localizacionUsuario.getCurrentLocation(
+                        LocationRequest.PRIORITY_HIGH_ACCURACY,
+                        CancellationTokenSource().token
+                    ).addOnSuccessListener {
+                        buscarDireccionViewModel.parkingCercanos(
+                            Direccion(
+                                0,
+                                it.latitude,
+                                it.longitude,
+                                null,
+                                null,
+                                null
+                            )
+                        )
+                        buscarDireccionViewModel.getReverseDireccion(
+                            Parking(
+                                0,
+                                it.latitude,
+                                it.longitude,
+                                0,
+                                null,
+                                null,
+                                null,
+                                null
+                            )
+                        )
                     }
                 } else {
                     Snackbar.make(
                         requireActivity().findViewById(android.R.id.content),
                         "Localización desactivada",
                         Snackbar.LENGTH_LONG
-                    )
-                        .show()
+                    ).show()
                 }
             } else {
                 Snackbar.make(
                     requireActivity().findViewById(android.R.id.content),
                     "Permisos no concedidos",
                     Snackbar.LENGTH_LONG
-                )
-                    .show()
+                ).show()
             }
         }
 

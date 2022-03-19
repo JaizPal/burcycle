@@ -16,7 +16,18 @@ class ParkingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun render(parking: Parking) {
         binding.tvCapacidadParking.text = "Capacidad: " + parking.capacidad.toString()
         binding.tvDistancia.text = "Distancia: " + parking.distancia?.toInt().toString() + " metros"
-        binding.tvDireccion.text = parking.direccion.toString()
+//        binding.tvDireccion.text = parking.direccion.toString()
+        binding.tvDireccion.text =
+            (if (!parking.direccion?.calle.isNullOrEmpty()) {
+                if (!parking.direccion?.numero.isNullOrEmpty()) {
+                    parking.direccion?.calle + " " + parking.direccion?.numero
+                } else {
+                    parking.direccion?.calle
+                }
+            } else {
+                " "
+            }).toString()
+        binding.cardParking.setOnClickListener { cardOnClick() }
         binding.cardArrow.setOnClickListener { cardOnClick() }
     }
 
