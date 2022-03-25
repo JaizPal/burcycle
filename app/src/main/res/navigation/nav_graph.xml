@@ -23,5 +23,14 @@
         android:id="@+id/buscarDireccionFragment"
         android:name="com.example.burparking.ui.view.BuscarDireccionFragment"
         android:label="fragment_buscar_direccion"
-        tools:layout="@layout/fragment_buscar_direccion" />
+        tools:layout="@layout/fragment_buscar_direccion" >
+        <action
+            android:id="@+id/action_buscarDireccionFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.example.burparking.ui.view.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map" />
 </navigation>

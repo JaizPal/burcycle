@@ -31,7 +31,7 @@ android {
         targetSdk 31
         versionCode 1
         versionName "1.0"
-
+        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -102,6 +102,12 @@ dependencies {
 
     // Google location
     implementation 'com.google.android.gms:play-services-location:19.0.1'
+
+    // OSM
+    implementation "org.osmdroid:osmdroid-android:$osm_version"
+    implementation "org.osmdroid:osmdroid-wms:$osm_version"
+    implementation "org.osmdroid:osmdroid-mapsforge:$osm_version"
+    implementation "org.osmdroid:osmdroid-geopackage:$osm_version"
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

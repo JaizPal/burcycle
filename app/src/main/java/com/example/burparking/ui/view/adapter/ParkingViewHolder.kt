@@ -4,6 +4,8 @@ import android.transition.AutoTransition
 import android.transition.Fade
 import android.transition.TransitionManager
 import android.view.View
+import androidx.fragment.app.findFragment
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.burparking.R
 import com.example.burparking.databinding.ItemParkingBinding
@@ -29,6 +31,9 @@ class ParkingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             }).toString()
         binding.cardParking.setOnClickListener { cardOnClick() }
         binding.cardArrow.setOnClickListener { cardOnClick() }
+        binding.mapaButton.setOnClickListener {
+            itemView.findNavController().navigate(R.id.action_buscarDireccionFragment_to_mapFragment)
+        }
     }
 
     private fun cardOnClick() {

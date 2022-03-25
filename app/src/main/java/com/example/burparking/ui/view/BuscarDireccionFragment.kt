@@ -17,7 +17,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.burparking.R
@@ -175,7 +174,13 @@ class BuscarDireccionFragment : Fragment() {
 
     private fun verificarPermisos() {
         val permisos =
-            arrayListOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION, ACCESS_NETWORK_STATE)
+            arrayListOf(
+                ACCESS_COARSE_LOCATION,
+                ACCESS_FINE_LOCATION,
+                ACCESS_NETWORK_STATE,
+                READ_EXTERNAL_STORAGE,
+                WRITE_EXTERNAL_STORAGE
+            )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             permisos.add(ACCESS_BACKGROUND_LOCATION)
@@ -194,6 +199,11 @@ class BuscarDireccionFragment : Fragment() {
             requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        buscarDireccionViewModel.parkingCargados.value = false
     }
 
 }

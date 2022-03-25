@@ -1,6 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext.hilt_version = '2.40.5'
+    ext.osm_version= '6.1.10'
     repositories {
         google()  // Google's Maven repository
         mavenCentral()

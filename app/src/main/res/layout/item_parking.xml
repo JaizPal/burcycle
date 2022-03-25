@@ -44,6 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/fondoGoogle"
+            android:minHeight="48dp"
             android:src="@drawable/ic_baseline_arrow_drop_down_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -78,6 +79,16 @@
                 android:text="IR"
                 app:layout_constraintBaseline_toBaselineOf="@+id/tvDireccion"
                 app:layout_constraintEnd_toEndOf="parent" />
+
+            <Button
+                android:id="@+id/mapaButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_map_outline"
+                android:text="Mapa"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvDireccion" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
