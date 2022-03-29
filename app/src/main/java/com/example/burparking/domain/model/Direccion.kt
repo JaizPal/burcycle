@@ -1,5 +1,7 @@
 package com.example.burparking.domain.model
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.example.burparking.data.database.entities.DireccionEntity
 import com.example.burparking.data.model.direccion.DireccionModel
 
@@ -10,7 +12,17 @@ data class Direccion(
     val numero: String?,
     var calle: String?,
     val codigoPostal: String?
-) {
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readLong(),
+        parcel.readDouble(),
+        parcel.readDouble(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString()
+    ) {
+    }
+
     override fun toString(): String {
 //        return (calle ?: "") + " " + (numero ?: "") + " " + (codigoPostal ?: "")
 //        return if (!calle.isNullOrEmpty()) {
@@ -38,6 +50,29 @@ data class Direccion(
             }
         } else {
             " "
+        }
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeLong(id)
+        parcel.writeDouble(lat)
+        parcel.writeDouble(lon)
+        parcel.writeString(numero)
+        parcel.writeString(calle)
+        parcel.writeString(codigoPostal)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Direccion> {
+        override fun createFromParcel(parcel: Parcel): Direccion {
+            return Direccion(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Direccion?> {
+            return arrayOfNulls(size)
         }
     }
 }

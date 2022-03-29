@@ -4,18 +4,20 @@ import android.transition.AutoTransition
 import android.transition.Fade
 import android.transition.TransitionManager
 import android.view.View
-import androidx.fragment.app.findFragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.burparking.R
 import com.example.burparking.databinding.ItemParkingBinding
+import com.example.burparking.domain.model.Direccion
 import com.example.burparking.domain.model.Parking
+import com.example.burparking.ui.view.BuscarDireccionFragmentDirections
+
 
 class ParkingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     private val binding = ItemParkingBinding.bind(view)
 
-    fun render(parking: Parking) {
+    fun render(parking: Parking, direccionActual: Direccion) {
         binding.tvCapacidadParking.text = "Capacidad: " + parking.capacidad.toString()
         binding.tvDistancia.text = "Distancia: " + parking.distancia?.toInt().toString() + " metros"
 //        binding.tvDireccion.text = parking.direccion.toString()
@@ -32,16 +34,20 @@ class ParkingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         binding.cardParking.setOnClickListener { cardOnClick() }
         binding.cardArrow.setOnClickListener { cardOnClick() }
         binding.mapaButton.setOnClickListener {
-            itemView.findNavController().navigate(R.id.action_buscarDireccionFragment_to_mapFragment)
+            itemView.findNavController().navigate(
+                BuscarDireccionFragmentDirections.actionBuscarDireccionFragmentToMapFragment(
+                    direccionActual,
+                    arrayOf(parking)
+                )
+            )
         }
+
     }
 
     private fun cardOnClick() {
         val cardParking = binding.cardParking
         val cardArrow = binding.cardArrow
         val layoutExpand = binding.layoutExpand
-
-
 
         if (layoutExpand.visibility == View.VISIBLE) {
             TransitionManager.beginDelayedTransition(cardParking, Fade())

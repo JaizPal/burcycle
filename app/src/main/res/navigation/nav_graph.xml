@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_principalFragment_to_buscarDireccionFragment"
             app:destination="@id/buscarDireccionFragment" />
+        <action
+            android:id="@+id/action_principalFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
     <fragment
         android:id="@+id/buscarDireccionFragment"
@@ -32,5 +35,12 @@
         android:id="@+id/mapFragment"
         android:name="com.example.burparking.ui.view.MapFragment"
         android:label="fragment_map"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map" >
+        <argument
+            android:name="direccionActual"
+            app:argType="com.example.burparking.domain.model.Direccion" />
+        <argument
+            android:name="parkings"
+            app:argType="com.example.burparking.domain.model.Parking[]" />
+    </fragment>
 </navigation>

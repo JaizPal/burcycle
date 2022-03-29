@@ -29,24 +29,24 @@ class BuscarDireccionViewModel @Inject constructor(
     var reverseDireccion = MutableLiveData<ReverseDireccionModel>()
 
     fun onCreate() {
-        parkingCargados.value = false
+        parkingCargados.postValue(false)
         viewModelScope.launch {
-            isLoading.postValue(true)
+            isLoading.value = true
             direcciones.value = getDireccionesUserCase()!!
-            isLoading.postValue(false)
+            isLoading.value = false
         }
         viewModelScope.launch {
-            isLoading.postValue(true)
+            isLoading.value = true
             parkings.value = getAllParkingsUseCase()!!
-            isLoading.postValue(false)
+            isLoading.value = false
         }
 
     }
 
     fun parkingCercanos(direccion: Direccion) {
         viewModelScope.launch {
-            var cacheParkingsCercanos: List<Parking>? = null
             isLoading.postValue(true)
+            var cacheParkingsCercanos: List<Parking>? = null
             parkings.value?.forEach { p -> establecerDistancia(direccion, p) }
             parkings.value = parkings.value?.sortedBy { it.distancia }
             if (parkings.value?.size!! >= 10) {
@@ -75,9 +75,8 @@ class BuscarDireccionViewModel @Inject constructor(
     }
 
     fun establecerDireccion(parking: Parking) {
-        parkingCargados.value = false
+        parkingCargados.postValue(false)
         viewModelScope.launch {
-            isLoading.postValue(true)
             val reverseDireccion = getReverseDireccionUseCase(parking.lon, parking.lat)
             parking.direccion = Direccion(
                 reverseDireccion.id,
@@ -90,16 +89,13 @@ class BuscarDireccionViewModel @Inject constructor(
             if(parking.direccion!!.calle.isNullOrEmpty() || parking.direccion!!.numero.isNullOrEmpty()) {
                 parking.direccion!!.calle = reverseDireccion.name
             }
-            parkingCargados.value = true
-            isLoading.postValue(false)
+            parkingCargados.postValue(true)
         }
     }
 
     fun getReverseDireccion(parking: Parking) {
         viewModelScope.launch {
-            isLoading.postValue(true)
            reverseDireccion.value  = getReverseDireccionUseCase(parking.lon, parking.lat)!!
-            isLoading.postValue(false)
         }
     }
 }

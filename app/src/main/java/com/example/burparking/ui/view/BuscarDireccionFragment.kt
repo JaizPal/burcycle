@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.LocationManager
+import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -17,9 +18,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.burparking.R
 import com.example.burparking.databinding.FragmentBuscarDireccionBinding
 import com.example.burparking.domain.model.Direccion
 import com.example.burparking.domain.model.Parking
@@ -39,12 +39,14 @@ class BuscarDireccionFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var permisosConcedidos = false
-    private val CODIGO_PERMISOS_UBICACION_SEGUNDO_PLANO = 2106
+    private val CODIGO_PERMISOS_UBICACION_SEGUNDO_PLANO = 1
 
     private lateinit var localizacionUsuario: FusedLocationProviderClient
 
     private val buscarDireccionViewModel: BuscarDireccionViewModel by viewModels()
     private lateinit var adapterDirecciones: ArrayAdapter<Direccion>
+
+    private var direccionActual: Direccion? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,10 +60,15 @@ class BuscarDireccionFragment : Fragment() {
     ): View? {
         _binding = FragmentBuscarDireccionBinding.inflate(inflater, container, false)
         verificarPermisos()
-
         val autoCompletado = binding.autoCompleteDirecciones
         buscarDireccionViewModel.isLoading.observe(requireActivity()) {
+            if(it) {
+                binding.progressBar.visibility = View.VISIBLE
+            } else {
+                binding.progressBar.visibility = View.GONE
+            }
             binding.progressBar.isVisible = it
+            Log.i("progressBar", it.toString())
         }
 
         buscarDireccionViewModel.direcciones.observe(requireActivity()) {
@@ -71,28 +78,32 @@ class BuscarDireccionFragment : Fragment() {
                     android.R.layout.simple_dropdown_item_1line,
                     buscarDireccionViewModel.direcciones.value!!.toList()
                 )
-                Log.i("Algo", buscarDireccionViewModel.direcciones.value!!.size.toString())
-                Log.i("Algo", buscarDireccionViewModel.direcciones.value!![1].toString())
-                Log.i("Algo", buscarDireccionViewModel.direcciones.value!![2].toString())
-                Log.i("Algo", buscarDireccionViewModel.direcciones.value!![123].toString())
-                Log.i("Algo", buscarDireccionViewModel.direcciones.value!![200].toString())
-                Log.i("Algo", buscarDireccionViewModel.direcciones.value!![20].toString())
                 autoCompletado.setAdapter(adapterDirecciones)
             }
         }
 
         autoCompletado.setOnItemClickListener { parent, view, position, id ->
             buscarDireccionViewModel.parkingCercanos(adapterDirecciones.getItem(position)!!)
+            direccionActual = adapterDirecciones.getItem(position)
         }
 
         buscarDireccionViewModel.parkingCargados.observe(requireActivity()) {
-            if (it == true) {
+            if (it == true && !binding.autoCompleteDirecciones.text.isNullOrEmpty()) {
                 cargarCardsParkings()
-                adapterDirecciones.notifyDataSetChanged()
             }
         }
 
+        binding.tvVerMapa.setOnClickListener {
+            findNavController().navigate(
+                BuscarDireccionFragmentDirections.actionBuscarDireccionFragmentToMapFragment(
+                    Direccion(0, 42.340833, -3.699722, null, null, null),
+                    arrayOf()
+                )
+            )
+        }
+
         binding.tvUbicacionActual.setOnClickListener {
+            verificarPermisos()
             if (permisosConcedidos) {
                 if (localizacionActivada()) {
                     localizacionUsuario =
@@ -101,15 +112,16 @@ class BuscarDireccionFragment : Fragment() {
                         LocationRequest.PRIORITY_HIGH_ACCURACY,
                         CancellationTokenSource().token
                     ).addOnSuccessListener {
+                        direccionActual = Direccion(
+                            0,
+                            it.latitude,
+                            it.longitude,
+                            null,
+                            null,
+                            null
+                        )
                         buscarDireccionViewModel.parkingCercanos(
-                            Direccion(
-                                0,
-                                it.latitude,
-                                it.longitude,
-                                null,
-                                null,
-                                null
-                            )
+                            direccionActual!!
                         )
                         buscarDireccionViewModel.getReverseDireccion(
                             Parking(
@@ -150,9 +162,10 @@ class BuscarDireccionFragment : Fragment() {
     }
 
     private fun cargarCardsParkings() {
-        val recyclerView = requireActivity().findViewById<RecyclerView>(R.id.recyclerViewParking)
+        val recyclerView = binding.recyclerViewParking
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = ParkingAdapter(buscarDireccionViewModel.closestParkings.value!!)
+        recyclerView.adapter =
+            ParkingAdapter(buscarDireccionViewModel.closestParkings.value!!, direccionActual!!)
     }
 
     private fun checkPermisos(permisos: Array<String>): Boolean {
@@ -201,9 +214,11 @@ class BuscarDireccionFragment : Fragment() {
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 
+
     override fun onPause() {
         super.onPause()
         buscarDireccionViewModel.parkingCargados.value = false
+        binding.autoCompleteDirecciones.setText("")
     }
 
 }
