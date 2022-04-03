@@ -29,7 +29,7 @@ class BuscarDireccionViewModel @Inject constructor(
     var reverseDireccion = MutableLiveData<ReverseDireccionModel>()
 
     fun onCreate() {
-        parkingCargados.postValue(false)
+//        parkingCargados.postValue(false)
         viewModelScope.launch {
             isLoading.value = true
             direcciones.value = getDireccionesUserCase()!!

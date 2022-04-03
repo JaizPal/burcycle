@@ -12,4 +12,6 @@
     <color name="fondoGoogle">#EBEBEB</color>
     <color name="texto">#636363</color>
     <color name="location">#006394</color>
+    <color name="shimmer">#B1B1B1</color>
+    <color name="shimmer_light">#dddddd</color>
 </resources>

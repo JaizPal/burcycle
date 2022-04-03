@@ -88,9 +88,18 @@ class BuscarDireccionFragment : Fragment() {
         }
 
         buscarDireccionViewModel.parkingCargados.observe(requireActivity()) {
+            if(it == false) {
+                binding.shimmer.startShimmer()
+                binding.shimmer.visibility = View.VISIBLE
+                binding.recyclerViewParking.visibility = View.GONE
+            }
             if (it == true && !binding.autoCompleteDirecciones.text.isNullOrEmpty()) {
                 cargarCardsParkings()
+                binding.shimmer.visibility = View.GONE
+                binding.shimmer.stopShimmer()
+                binding.recyclerViewParking.visibility = View.VISIBLE
             }
+
         }
 
         binding.tvVerMapa.setOnClickListener {
@@ -103,6 +112,7 @@ class BuscarDireccionFragment : Fragment() {
         }
 
         binding.tvUbicacionActual.setOnClickListener {
+            buscarDireccionViewModel.parkingCargados.postValue(false)
             verificarPermisos()
             if (permisosConcedidos) {
                 if (localizacionActivada()) {
@@ -217,7 +227,8 @@ class BuscarDireccionFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        buscarDireccionViewModel.parkingCargados.value = false
+        buscarDireccionViewModel.parkingCargados.value = null
+        binding.shimmer.visibility = View.GONE
         binding.autoCompleteDirecciones.setText("")
     }
 

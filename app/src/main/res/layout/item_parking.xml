@@ -47,7 +47,9 @@
             android:minHeight="48dp"
             android:src="@drawable/ic_baseline_arrow_drop_down_24"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpeakableTextPresentCheck"
+            android:contentDescription="@string/openarrow" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layoutExpand"

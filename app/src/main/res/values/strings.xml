@@ -14,5 +14,6 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="direcci_n">Dirección</string>
     <string name="a_donde_quieres_ir">¿A dónde quieres ir?</string>
+    <string name="openarrow">openArrow</string>
 
 </resources>

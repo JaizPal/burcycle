@@ -13,6 +13,7 @@ import android.os.StrictMode.ThreadPolicy
 import android.preference.PreferenceManager
 import android.transition.AutoTransition
 import android.transition.TransitionManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +29,7 @@ import com.example.burparking.domain.model.Parking
 import com.example.burparking.ui.viewModel.MapViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import org.osmdroid.config.Configuration.getInstance
+import org.osmdroid.tileprovider.tilesource.TileSourcePolicy
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.MapView
@@ -66,13 +68,28 @@ class MapFragment : Fragment() {
         setupOsmdroid()
         mapViewModel.onCreate()
         map = binding.map
+        mapColorConfigure2()
+        val provider: Array<String> =
+            arrayOf("https://tile.thunderforest.com/spinal-map/{z}/{x}/{y}.png?apikey=c8fa4a1f921d4384b4e755f57c8e668d")
 //        val tileSource = XYTileSource(
-//            "cycle", 0, 20, 256, ".png", arrayOf(
-//                "https://a.tile-cyclosm.openstreetmap.fr/[cyclosm|cyclosm-lite]/0,0,0.png"
-//            )
+//            "cycle",
+//            0,
+//            18,
+//            256,
+//            ".png",
+//            provider,
+//            "© Colaboradores de OpenStreetMap",
+//            TileSourcePolicy(2, TileSourcePolicy.FLAG_USER_AGENT_MEANINGFUL)
 //        )
-//
+        val aceeptUserAgent = TileSourcePolicy(2, TileSourcePolicy.FLAG_NO_PREVENTIVE)
+
+
 //        map.setTileSource(tileSource)
+        Log.i("Provider", map.tileProvider.tileSource.name())
+
+
+
+
         parkings = MapFragmentArgs.fromBundle(requireArguments()).parkings
         direccionActual = MapFragmentArgs.fromBundle(requireArguments()).direccionActual
         getInstance().load(
@@ -87,14 +104,14 @@ class MapFragment : Fragment() {
 
                     mapViewModel.parkings.value?.forEach {
                         val overlayItem = OverlayItem(
-                            it.calle,
+                            it.id.toString(),
                             it.numero,
                             GeoPoint(it.lat, it.lon)
                         )
                         overlayItem.setMarker(
                             ContextCompat.getDrawable(
                                 requireContext(),
-                                R.drawable.ic_location
+                                R.drawable.ic_location_pin
                             )
                         )
                         items.add(overlayItem)
@@ -111,7 +128,9 @@ class MapFragment : Fragment() {
                                     binding.mapLayout,
                                     AutoTransition()
                                 )
+                                binding.cardParking.visibility = View.VISIBLE
                                 binding.LayoutInfo.visibility = View.VISIBLE
+                                mapViewModel.setParking(item!!.title.toLong())
                                 return true
                             }
 
@@ -136,7 +155,7 @@ class MapFragment : Fragment() {
             overlayItem.setMarker(
                 ContextCompat.getDrawable(
                     requireContext(),
-                    R.drawable.ic_location
+                    R.drawable.ic_location_pin
                 )
             )
             items.add(overlayItem)
@@ -189,7 +208,8 @@ class MapFragment : Fragment() {
 
     @SuppressLint("MissingPermission")
     private fun getLastKnownLocation(): Location? {
-        val mLocationManager = requireContext().getSystemService(LOCATION_SERVICE) as LocationManager?
+        val mLocationManager =
+            requireContext().getSystemService(LOCATION_SERVICE) as LocationManager?
         val providers = mLocationManager!!.getProviders(true)
         var bestLocation: Location? = null
         for (provider in providers) {
