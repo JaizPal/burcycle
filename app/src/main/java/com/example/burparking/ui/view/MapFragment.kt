@@ -28,14 +28,17 @@ import com.example.burparking.domain.model.Direccion
 import com.example.burparking.domain.model.Parking
 import com.example.burparking.ui.viewModel.MapViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import org.mapsforge.map.layer.download.tilesource.TileSource
+import org.osmdroid.config.Configuration
 import org.osmdroid.config.Configuration.getInstance
+import org.osmdroid.tileprovider.MapTileProviderBasic
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.tileprovider.tilesource.TileSourcePolicy
+import org.osmdroid.tileprovider.tilesource.XYTileSource
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.ItemizedIconOverlay
-import org.osmdroid.views.overlay.ItemizedOverlayWithFocus
-import org.osmdroid.views.overlay.OverlayItem
+import org.osmdroid.views.overlay.*
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 
@@ -68,9 +71,9 @@ class MapFragment : Fragment() {
         setupOsmdroid()
         mapViewModel.onCreate()
         map = binding.map
-        mapColorConfigure2()
-        val provider: Array<String> =
-            arrayOf("https://tile.thunderforest.com/spinal-map/{z}/{x}/{y}.png?apikey=c8fa4a1f921d4384b4e755f57c8e668d")
+//        mapColorConfigure()
+//        val provider: Array<String> =
+//            arrayOf("http://b.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png")
 //        val tileSource = XYTileSource(
 //            "cycle",
 //            0,
@@ -81,10 +84,14 @@ class MapFragment : Fragment() {
 //            "© Colaboradores de OpenStreetMap",
 //            TileSourcePolicy(2, TileSourcePolicy.FLAG_USER_AGENT_MEANINGFUL)
 //        )
-        val aceeptUserAgent = TileSourcePolicy(2, TileSourcePolicy.FLAG_NO_PREVENTIVE)
+//        val aceeptUserAgent = TileSourcePolicy(2, TileSourcePolicy.FLAG_NO_PREVENTIVE)
 
 
-//        map.setTileSource(tileSource)
+        map.setTileSource(TileSourceFactory.WIKIMEDIA)
+        val copyrightOverlay = CopyrightOverlay(requireContext())
+        copyrightOverlay.setCopyrightNotice(map.tileProvider.tileSource.copyrightNotice)
+        copyrightOverlay.setAlignRight(true)
+        map.overlays.add(copyrightOverlay)
         Log.i("Provider", map.tileProvider.tileSource.name())
 
 
@@ -128,9 +135,13 @@ class MapFragment : Fragment() {
                                     binding.mapLayout,
                                     AutoTransition()
                                 )
+
                                 binding.cardParking.visibility = View.VISIBLE
                                 binding.LayoutInfo.visibility = View.VISIBLE
                                 mapViewModel.setParking(item!!.title.toLong())
+                                map.overlays.clear()
+                                setRoad(item.point as GeoPoint)
+                                map.invalidate()
                                 return true
                             }
 
@@ -167,8 +178,13 @@ class MapFragment : Fragment() {
                             binding.mapLayout,
                             AutoTransition()
                         )
-                        binding.cardParking.visibility = View.VISIBLE
-                        binding.LayoutInfo.visibility = View.VISIBLE
+                        if(binding.cardParking.visibility == View.VISIBLE) {
+                            binding.cardParking.visibility = View.GONE
+                            binding.LayoutInfo.visibility = View.GONE
+                        } else {
+                            binding.cardParking.visibility = View.VISIBLE
+                            binding.LayoutInfo.visibility = View.VISIBLE
+                        }
                         mapViewModel.setParking(item!!.title.toLong())
                         return true
                     }
@@ -182,7 +198,7 @@ class MapFragment : Fragment() {
             )
             map.overlays.add(overlay)
 
-            setRoad()
+            setRoad(GeoPoint(parkings[0].lat, parkings[0].lon))
         }
         mapViewModel.parkingPulsado.observe(requireActivity()) {
             binding.textView2.text = (if (!it.direccion?.calle.isNullOrEmpty()) {
@@ -198,11 +214,11 @@ class MapFragment : Fragment() {
         return binding.root
     }
 
-    private fun setRoad() {
+    private fun setRoad(point: GeoPoint) {
         val wayPoints = arrayListOf<GeoPoint>()
         val localizacionActual = getLastKnownLocation()
         wayPoints.add(GeoPoint(localizacionActual!!.latitude, localizacionActual.longitude))
-        wayPoints.add(GeoPoint(parkings[0].lat, parkings[0].lon))
+        wayPoints.add(point)
         mapViewModel.setRoad(wayPoints, map, requireContext())
     }
 
@@ -335,12 +351,13 @@ class MapFragment : Fragment() {
     }
 
     private fun setupOsmdroid() {
-        with(getInstance()) {
-            /*set user agent to prevent getting banned from the OSM servers*/
-            userAgentValue = BuildConfig.APPLICATION_ID
-            /*set the path for osmdroid's files (for example, tile cache)*/
-            osmdroidBasePath = requireContext().getExternalFilesDir(null)
-        }
+//        with(getInstance()) {
+//            /*set user agent to prevent getting banned from the OSM servers*/
+//            userAgentValue = BuildConfig.APPLICATION_ID
+//            /*set the path for osmdroid's files (for example, tile cache)*/
+//            osmdroidBasePath = requireContext().getExternalFilesDir(null)
+//        }
+        Configuration.getInstance().userAgentValue = BuildConfig.APPLICATION_ID
     }
 
     override fun onRequestPermissionsResult(
