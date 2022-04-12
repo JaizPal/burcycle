@@ -4,6 +4,10 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.example.burparking.data.database.entities.ParkingEntity
 import com.example.burparking.data.model.parking.ParkingModel
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 data class Parking(
     val id: Long,
@@ -24,8 +28,7 @@ data class Parking(
         parcel.readString(),
         parcel.readValue(Float::class.java.classLoader) as? Float,
         parcel.readParcelable(Direccion::class.java.classLoader)
-    ) {
-    }
+    )
 
     override fun toString(): String {
         return direccion.toString()

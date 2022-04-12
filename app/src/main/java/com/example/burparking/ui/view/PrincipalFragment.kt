@@ -1,20 +1,26 @@
 package com.example.burparking.ui.view
 
 import android.os.Bundle
+import android.transition.Fade
+import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.burparking.R
 import com.example.burparking.databinding.FragmentPrincipalBinding
+import com.example.burparking.ui.viewModel.PrincipalViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class PrincipalFragment : Fragment() {
 
-    var _binding: FragmentPrincipalBinding? = null
-    val binding get() = _binding!!
+    private var _binding: FragmentPrincipalBinding? = null
+    private val binding get() = _binding!!
+
+    private val principalViewModel: PrincipalViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -25,14 +31,21 @@ class PrincipalFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentPrincipalBinding.inflate(inflater, container, false)
-//        binding.autoCompleteDireccion.setOnClickListener{
-//            navegarBuscarDireccion()
-//        }
-        binding.autoCompleteDireccion.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus) {
-                navegarBuscarDireccion()
-            }
 
+        principalViewModel.onCreate()
+
+        principalViewModel.parte1.observe(requireActivity()) {
+            binding.parte1.text = it
+        }
+        principalViewModel.parte2.observe(requireActivity()) {
+            binding.parte2.text = it
+        }
+        principalViewModel.autor.observe(requireActivity()) {
+            binding.autor.text = it
+        }
+
+        binding.buscarButton.setOnClickListener {
+            navegarBuscarDireccion()
         }
         return binding.root
     }

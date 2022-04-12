@@ -3,49 +3,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.burparking">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".BurparkingApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:noHistory="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Burparking"
-        tools:replace="android:allowBackup"
-        android:noHistory = "true"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:replace="android:allowBackup">
         <activity
-            android:name="com.example.burparking.ui.view.LoginActivity"
+            android:name=".ui.view.IncidenciaActivity"
+            android:exported="false"
+            android:label="@string/title_activity_incidencia"
+            android:theme="@style/Theme.Burparking.NoActionBar" />
+        <activity
+            android:name=".ui.view.LoginActivity"
             android:exported="true"
             android:label="@string/title_activity_login"
-            android:theme="@style/Theme.Burparking.NoActionBar" >
+            android:theme="@style/Theme.Burparking.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.burparking.ui.view.MainActivity"
+            android:name=".ui.view.MainActivity"
             android:exported="false"
             android:label="@string/app_name"
             android:theme="@style/Theme.Burparking.NoActionBar">
 
-            <!--<intent-filter>
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter> -->
+            </intent-filter>
+            -->
         </activity>
 
+        <meta-data
+            android:name="THUNDERFOREST_MAPID"
+            android:value="c8fa4a1f921d4384b4e755f57c8e668d" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

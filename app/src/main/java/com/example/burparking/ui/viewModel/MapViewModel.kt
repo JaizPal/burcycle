@@ -66,6 +66,8 @@ class MapViewModel @Inject constructor(
             (roadManager as OSRMRoadManager).setMean(OSRMRoadManager.MEAN_BY_BIKE)
             val road = roadManager.getRoad(geoPoints)
             val roadOverlay = RoadManager.buildRoadOverlay(road)
+            // TODO Comprobar las nuevas distancias
+            parkingPulsado.value?.distancia = roadOverlay.distance.toFloat()
             roadOverlay.width = 12.0f
             roadOverlay.color = Color.parseColor("#03adfc")
             map.overlays.add(roadOverlay)

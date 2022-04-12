@@ -30,6 +30,9 @@
         <action
             android:id="@+id/action_buscarDireccionFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_buscarDireccionFragment_to_informacionFragment"
+            app:destination="@id/informacionFragment" />
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
@@ -42,5 +45,22 @@
         <argument
             android:name="parkings"
             app:argType="com.example.burparking.domain.model.Parking[]" />
+        <action
+            android:id="@+id/action_mapFragment_to_informacionFragment"
+            app:destination="@id/informacionFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/informacionFragment"
+        android:name="com.example.burparking.ui.view.InformacionFragment"
+        android:label="fragment_informacion"
+        tools:layout="@layout/fragment_informacion" >
+        <argument
+            android:name="parking"
+            app:argType="com.example.burparking.domain.model.Parking" />
+    </fragment>
+    <activity
+        android:id="@+id/incidenciaActivity"
+        android:name="com.example.burparking.ui.view.IncidenciaActivity"
+        android:label="activity_incidencia"
+        tools:layout="@layout/activity_incidencia" />
 </navigation>

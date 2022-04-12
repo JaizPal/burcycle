@@ -68,7 +68,6 @@ class BuscarDireccionFragment : Fragment() {
                 binding.progressBar.visibility = View.GONE
             }
             binding.progressBar.isVisible = it
-            Log.i("progressBar", it.toString())
         }
 
         buscarDireccionViewModel.direcciones.observe(requireActivity()) {
@@ -87,19 +86,33 @@ class BuscarDireccionFragment : Fragment() {
             direccionActual = adapterDirecciones.getItem(position)
         }
 
-        buscarDireccionViewModel.parkingCargados.observe(requireActivity()) {
-            if(it == false) {
+//        buscarDireccionViewModel.parkingCargados.observe(requireActivity()) {
+//            if(it == false) {
+//                binding.shimmer.startShimmer()
+//                binding.shimmer.visibility = View.VISIBLE
+//                binding.recyclerViewParking.visibility = View.GONE
+//            }
+//            if (it == true && !binding.autoCompleteDirecciones.text.isNullOrEmpty()) {
+//                //cargarCardsParkings()
+//                binding.shimmer.visibility = View.GONE
+//                binding.shimmer.stopShimmer()
+//                binding.recyclerViewParking.visibility = View.VISIBLE
+//                Log.i("He pasado", "He pasado")
+//            }
+//
+//        }
+
+        buscarDireccionViewModel.nParking.observe(requireActivity()) {
+            if(it == 10) {
+                binding.shimmer.visibility = View.GONE
+                binding.shimmer.stopShimmer()
+                binding.recyclerViewParking.visibility = View.VISIBLE
+                cargarCardsParkings()
+            } else {
                 binding.shimmer.startShimmer()
                 binding.shimmer.visibility = View.VISIBLE
                 binding.recyclerViewParking.visibility = View.GONE
             }
-            if (it == true && !binding.autoCompleteDirecciones.text.isNullOrEmpty()) {
-                cargarCardsParkings()
-                binding.shimmer.visibility = View.GONE
-                binding.shimmer.stopShimmer()
-                binding.recyclerViewParking.visibility = View.VISIBLE
-            }
-
         }
 
         binding.tvVerMapa.setOnClickListener {
@@ -112,7 +125,7 @@ class BuscarDireccionFragment : Fragment() {
         }
 
         binding.tvUbicacionActual.setOnClickListener {
-            buscarDireccionViewModel.parkingCargados.postValue(false)
+            buscarDireccionViewModel.nParking.postValue(0)
             verificarPermisos()
             if (permisosConcedidos) {
                 if (localizacionActivada()) {
@@ -197,13 +210,23 @@ class BuscarDireccionFragment : Fragment() {
 
     private fun verificarPermisos() {
         val permisos =
-            arrayListOf(
-                ACCESS_COARSE_LOCATION,
-                ACCESS_FINE_LOCATION,
-                ACCESS_NETWORK_STATE,
-                READ_EXTERNAL_STORAGE,
-                WRITE_EXTERNAL_STORAGE
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                arrayListOf(
+                    ACCESS_COARSE_LOCATION,
+                    ACCESS_FINE_LOCATION,
+                    ACCESS_NETWORK_STATE,
+                    READ_EXTERNAL_STORAGE,
+                    WRITE_EXTERNAL_STORAGE,
+                    FOREGROUND_SERVICE
+                )
+            } else {
+                arrayListOf(
+                    ACCESS_COARSE_LOCATION,
+                    ACCESS_FINE_LOCATION,
+                    ACCESS_NETWORK_STATE,
+                    READ_EXTERNAL_STORAGE,
+                    WRITE_EXTERNAL_STORAGE)
+            }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             permisos.add(ACCESS_BACKGROUND_LOCATION)

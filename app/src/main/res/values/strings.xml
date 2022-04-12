@@ -15,5 +15,15 @@
     <string name="direcci_n">Dirección</string>
     <string name="a_donde_quieres_ir">¿A dónde quieres ir?</string>
     <string name="openarrow">openArrow</string>
+    <string name="leyenda">leyenda</string>
+    <string name="ba_os">Baños</string>
+    <string name="tienda_bicicletas">Tienda bicicletas</string>
+    <string name="cafeter_a">Cafetería</string>
+    <string name="cervecer_a">Cervecería</string>
+    <string name="pub">Pub</string>
+    <string name="fuente">Fuente</string>
+    <string name="title_activity_incidencia">IncidenciaActivity</string>
+    <string name="cerrar_sesi_n">Cerrar sesión</string>
+    <string name="a_d_nde_quieres_ir">¿A dónde quieres ir?</string>
 
 </resources>

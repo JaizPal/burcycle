@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="preloaded_fonts" translatable="false">
+        <item>@font/be_vietnam_light</item>
+        <item>@font/be_vietnam_medium_italic</item>
+        <item>@font/major_mono_display</item>
+    </array>
+</resources>

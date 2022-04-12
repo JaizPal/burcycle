@@ -3,12 +3,15 @@ package com.example.burparking.ui.view
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
@@ -49,8 +52,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         NavigationUI.setupWithNavController(binding.navView, navController)
 
         navView.setNavigationItemSelectedListener(this)
-
-
+        val window = this.window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        getWindow().statusBarColor = ContextCompat.getColor(this, R.color.verdeClaro)
+        supportActionBar?.setDisplayShowTitleEnabled(false);
 
 
 //        setSupportActionBar(binding.toolbar)
@@ -107,6 +112,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+    private fun irIncidencia(): Boolean {
+        binding.drawerLayout.closeDrawers()
+        val intent = Intent(this, IncidenciaActivity::class.java).apply {  }
+        startActivity(intent)
+
+        return true
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return NavigationUI.navigateUp(navController, binding.drawerLayout)
@@ -126,8 +139,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         Log.i("Algo", item.itemId.toString() + " Jaime")
         when (item.itemId){
             R.id.nav_cerrar_sesion -> cerrarSesion()
-            R.id.mapFragment -> findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.action_buscarDireccionFragment_to_mapFragment)
+            R.id.incidenciaActivity -> irIncidencia()
         }
+
         return true
     }
 

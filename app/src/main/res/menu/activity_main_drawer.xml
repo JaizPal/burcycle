@@ -7,6 +7,11 @@
         <item
             android:id="@+id/nav_cerrar_sesion"
             android:icon="@drawable/ic_baseline_cloud_off_24"
-            android:title="Cerrar sesión"/>
+            android:title="@string/cerrar_sesi_n"/>
+        <item
+            android:id="@+id/incidenciaActivity"
+            android:checked="true"
+            android:icon="@drawable/ic_alert_circle_outline"
+            android:title="Incidencias" />
     </group>
 </menu>

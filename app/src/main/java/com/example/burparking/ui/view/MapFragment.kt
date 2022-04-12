@@ -21,6 +21,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.burparking.BuildConfig
 import com.example.burparking.R
 import com.example.burparking.databinding.FragmentMapBinding
@@ -28,17 +29,16 @@ import com.example.burparking.domain.model.Direccion
 import com.example.burparking.domain.model.Parking
 import com.example.burparking.ui.viewModel.MapViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import org.mapsforge.map.layer.download.tilesource.TileSource
 import org.osmdroid.config.Configuration
 import org.osmdroid.config.Configuration.getInstance
-import org.osmdroid.tileprovider.MapTileProviderBasic
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory
-import org.osmdroid.tileprovider.tilesource.TileSourcePolicy
-import org.osmdroid.tileprovider.tilesource.XYTileSource
+import org.osmdroid.tileprovider.tilesource.ThunderforestTileSource
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.*
+import org.osmdroid.views.overlay.CopyrightOverlay
+import org.osmdroid.views.overlay.ItemizedIconOverlay
+import org.osmdroid.views.overlay.ItemizedOverlayWithFocus
+import org.osmdroid.views.overlay.OverlayItem
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 
@@ -73,7 +73,7 @@ class MapFragment : Fragment() {
         map = binding.map
 //        mapColorConfigure()
 //        val provider: Array<String> =
-//            arrayOf("http://b.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png")
+//            arrayOf("https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=c8fa4a1f921d4384b4e755f57c8e668d")
 //        val tileSource = XYTileSource(
 //            "cycle",
 //            0,
@@ -86,12 +86,14 @@ class MapFragment : Fragment() {
 //        )
 //        val aceeptUserAgent = TileSourcePolicy(2, TileSourcePolicy.FLAG_NO_PREVENTIVE)
 
-
-        map.setTileSource(TileSourceFactory.WIKIMEDIA)
+        val thunderforestTileSource =
+            ThunderforestTileSource(requireContext(), ThunderforestTileSource.CYCLE)
+        map.setTileSource(thunderforestTileSource)
         val copyrightOverlay = CopyrightOverlay(requireContext())
-        copyrightOverlay.setCopyrightNotice(map.tileProvider.tileSource.copyrightNotice)
+        copyrightOverlay.setCopyrightNotice(thunderforestTileSource.copyrightNotice)
         copyrightOverlay.setAlignRight(true)
         map.overlays.add(copyrightOverlay)
+
         Log.i("Provider", map.tileProvider.tileSource.name())
 
 
@@ -141,7 +143,7 @@ class MapFragment : Fragment() {
                                 mapViewModel.setParking(item!!.title.toLong())
                                 map.overlays.clear()
                                 setRoad(item.point as GeoPoint)
-                                map.invalidate()
+
                                 return true
                             }
 
@@ -156,6 +158,7 @@ class MapFragment : Fragment() {
                 }
 
             }
+            map.invalidate()
         } else {
             val items = ArrayList<OverlayItem>()
             val overlayItem = OverlayItem(
@@ -178,7 +181,7 @@ class MapFragment : Fragment() {
                             binding.mapLayout,
                             AutoTransition()
                         )
-                        if(binding.cardParking.visibility == View.VISIBLE) {
+                        if (binding.cardParking.visibility == View.VISIBLE) {
                             binding.cardParking.visibility = View.GONE
                             binding.LayoutInfo.visibility = View.GONE
                         } else {
@@ -186,6 +189,7 @@ class MapFragment : Fragment() {
                             binding.LayoutInfo.visibility = View.VISIBLE
                         }
                         mapViewModel.setParking(item!!.title.toLong())
+
                         return true
                     }
 
@@ -201,7 +205,8 @@ class MapFragment : Fragment() {
             setRoad(GeoPoint(parkings[0].lat, parkings[0].lon))
         }
         mapViewModel.parkingPulsado.observe(requireActivity()) {
-            binding.textView2.text = (if (!it.direccion?.calle.isNullOrEmpty()) {
+            binding.tvDireccionMap.text = (if (!it.direccion?.calle.isNullOrEmpty()) {
+                it.direccion?.calle + " " + it.direccion?.numero
                 if (!it.direccion?.numero.isNullOrEmpty()) {
                     it.direccion?.calle + " " + it.direccion?.numero
                 } else {
@@ -210,9 +215,40 @@ class MapFragment : Fragment() {
             } else {
                 " "
             }).toString()
+            binding.tvCapacidadMap.text = it.capacidad.toString()
         }
+
+        binding.buttonClose.setOnClickListener {
+            TransitionManager.beginDelayedTransition(
+                binding.mapLayout,
+                AutoTransition()
+            )
+            binding.cardParking.visibility = View.GONE
+        }
+
+        binding.floatingActionButton.setOnClickListener {
+            TransitionManager.beginDelayedTransition(
+                binding.mapLayout,
+                AutoTransition()
+            )
+            if (binding.leyendaCard.visibility == View.VISIBLE) {
+                binding.leyendaCard.visibility = View.GONE
+            } else {
+                binding.leyendaCard.visibility = View.VISIBLE
+            }
+        }
+
+        binding.buttonIrMap.setOnClickListener {
+            findNavController().navigate(
+                MapFragmentDirections.actionMapFragmentToInformacionFragment(
+                    mapViewModel.parkingPulsado.value!!
+                )
+            )
+        }
+
         return binding.root
     }
+
 
     private fun setRoad(point: GeoPoint) {
         val wayPoints = arrayListOf<GeoPoint>()
@@ -267,7 +303,7 @@ class MapFragment : Fragment() {
     private fun setZoomMap() {
         val mapController = map.controller
         if (parkings.isEmpty()) {
-            mapController.setZoom(15.0)
+            mapController.setZoom(17.0)
             val startPoint = GeoPoint(42.340833, -3.699722)
             mapController.setCenter(startPoint)
         } else {

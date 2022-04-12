@@ -42,6 +42,14 @@ class ParkingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             )
         }
 
+        binding.irButton.setOnClickListener {
+            itemView.findNavController().navigate(
+                BuscarDireccionFragmentDirections.actionBuscarDireccionFragmentToInformacionFragment(
+                    parking
+                )
+            )
+        }
+
     }
 
     private fun cardOnClick() {
