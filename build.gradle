@@ -15,6 +15,9 @@ buildscript {
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.4.1")
         // Dagger Hilt
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
+        // Firebase crashlytics
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
+
     }
 }
 

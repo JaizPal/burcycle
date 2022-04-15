@@ -3,6 +3,7 @@ package com.example.burparking.ui.viewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.burparking.domain.model.Parking
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,7 +34,8 @@ class IncidenciaViewModel @Inject constructor(): ViewModel() {
             "descripcion" to descripcion,
             "tipo" to tipo,
             "usuario" to FirebaseAuth.getInstance().currentUser?.email,
-            "idParking" to parking?.id
+            "idParking" to parking?.id,
+            "fecha" to Timestamp(Date())
         )).addOnSuccessListener {
             succes.value = 0
         }.addOnCanceledListener {

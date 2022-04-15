@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.burparking.R
 import com.example.burparking.databinding.FragmentInformacionBinding
 import com.example.burparking.domain.model.Parking
 import com.example.burparking.ui.view.adapter.IncidenciaAdapter
@@ -41,16 +43,7 @@ class InformacionFragment : Fragment() {
         binding.tvDireccion.text = parking.direccion.toString()
         binding.tvCapacidad.text = parking.capacidad.toString()
         informacionViewModel.onCreate()
-        informacionViewModel.reportesRaw.observe(requireActivity()) {
-            Log.i("Reportes", it.toString())
-            Log.i("Reportes", "ID parking = " + parking.id)
-            Log.i("Reportes", "Capacidad último reporte = " + it[0]["capacidad"].toString().toInt())
-            Log.i(
-                "Reportes",
-                "Fecha último reporte = " + (it[0]["fechaReporte"] as Timestamp).toDate().toString()
-            )
 
-        }
         informacionViewModel.fechaUltimoReporte.observe(requireActivity()) {
             binding.tvFechaReporte.text = (if (it != null) {
                 SimpleDateFormat(
@@ -67,11 +60,7 @@ class InformacionFragment : Fragment() {
         }
 
         informacionViewModel.capacidadMedia.observe(requireActivity()) {
-             if (!it.isNaN()) {
-                 binding.tvCapacidadMedia.text = it.toString()
-             } else {
-                 binding.tvCapacidadMedia.text = "No hay datos"
-             }
+            binding.tvCapacidadMedia.text = it.toString()
         }
 
         informacionViewModel.incidenciasCargadas.observe(requireActivity()) {
@@ -81,6 +70,11 @@ class InformacionFragment : Fragment() {
                 recyclerView.adapter = IncidenciaAdapter(informacionViewModel.incidencias.value!!.toList())
             }
         }
+
+        binding.buttonIr.setOnClickListener {
+            findNavController().navigate(InformacionFragmentDirections.actionInformacionFragmentToReporteFragment(parking))
+        }
+
         return binding.root
 
 

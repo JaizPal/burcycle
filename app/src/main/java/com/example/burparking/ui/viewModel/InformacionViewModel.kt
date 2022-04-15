@@ -1,5 +1,6 @@
 package com.example.burparking.ui.viewModel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.burparking.domain.model.Incidencia
@@ -7,19 +8,20 @@ import com.example.burparking.domain.model.Parking
 import com.example.burparking.domain.model.Reporte
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
+import kotlin.math.roundToInt
 
 @HiltViewModel
 class InformacionViewModel @Inject constructor() : ViewModel() {
 
     var parking: Parking? = null
-    val reportesRaw = MutableLiveData<List<HashMap<String, Any>>>()
     val reportes: ArrayList<Reporte> = arrayListOf()
     var reporte: Reporte? = null
-    var capacidadMedia = MutableLiveData<Double>()
+    var capacidadMedia = MutableLiveData<Int>()
     var capacidadUltimoReporte = MutableLiveData<Int>()
     var fechaUltimoReporte = MutableLiveData<Date>()
     private val db = FirebaseFirestore.getInstance()
@@ -27,14 +29,14 @@ class InformacionViewModel @Inject constructor() : ViewModel() {
     var incidenciasCargadas = MutableLiveData<Boolean>()
 
     fun onCreate() {
-        db.collection("reportes").document("reportes").get().addOnSuccessListener {
-            reportesRaw.value = it.get("reportes") as List<HashMap<String, Any>>?
-            reportesRaw.value?.forEach {
+        db.collection("reportes").get().addOnSuccessListener {
+            val reportesRaw= it.documents
+            reportesRaw.forEach {
                 reportes.add(
                     Reporte(
-                        it["idParking"].toString().toLong(),
-                        it["capacidad"].toString().toInt(),
-                        (it["fechaReporte"] as Timestamp).toDate()
+                        it.getLong("idParking")!!,
+                        it.getLong("capacidad")!!.toInt(),
+                        it.getTimestamp("fechaReporte")!!.toDate()
                     )
                 )
             }
@@ -42,12 +44,12 @@ class InformacionViewModel @Inject constructor() : ViewModel() {
             setCapacidadMedia()
         }
 
-        db.collection("incidencias").get().addOnSuccessListener {
+        db.collection("incidencias").orderBy("fecha", Query.Direction.DESCENDING).get().addOnSuccessListener {
             val incidenciasRaw= it.documents
             incidenciasCargadas.postValue(false)
             incidencias.value = arrayListOf()
             incidenciasRaw.forEach{
-                val incidencia = Incidencia(it.getString("idParking")?.toLong(),it.id, it.getString("tipo")!!, it.getString("descripcion")!!)
+                val incidencia = Incidencia(it.getLong("idParking"),it.id, it.getString("tipo")!!, it.getString("descripcion")!!)
                 if (incidencia.idParking == parking?.id) {
                     incidencias.value?.add(incidencia)
                 }
@@ -75,8 +77,10 @@ class InformacionViewModel @Inject constructor() : ViewModel() {
             }
         }
         capacidadMediaReporte /= reportesFiltrados.size
-        capacidadMedia.postValue(capacidadMediaReporte)
-
+        if(capacidadMediaReporte.isNaN()) {
+            capacidadMediaReporte = 0.0
+        }
+        capacidadMedia.postValue(capacidadMediaReporte.roundToInt())
 
     }
 }

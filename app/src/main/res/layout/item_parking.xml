@@ -75,10 +75,14 @@
 
             <Button
                 android:id="@+id/irButton"
+                style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="44dp"
+                android:gravity="center|center_horizontal"
                 android:text="IR"
+                android:textColor="@color/white"
+                android:fontFamily="@font/be_vietnam_light"
                 app:layout_constraintBaseline_toBaselineOf="@+id/mapaButton"
                 app:layout_constraintEnd_toEndOf="parent" />
 
@@ -92,7 +96,8 @@
                 android:drawableLeft="@drawable/ic_map_outline"
                 android:text="Mapa"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvDireccion" />
+                app:layout_constraintTop_toBottomOf="@+id/tvDireccion"
+                android:fontFamily="@font/be_vietnam_light"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

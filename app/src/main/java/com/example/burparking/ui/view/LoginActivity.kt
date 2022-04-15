@@ -3,18 +3,14 @@ package com.example.burparking.ui.view
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.burparking.R
 import com.example.burparking.databinding.ActivityLoginBinding
-import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -66,9 +62,9 @@ class LoginActivity : AppCompatActivity() {
                         if (it.isSuccessful) {
                             FirebaseAuth.getInstance().currentUser?.sendEmailVerification()
                             mostrarSnackBar("Se ha enviado un email de confirmación a su correo")
-                        } else {
-                            showAlert()
                         }
+                    }.addOnFailureListener {
+                        showAlert((it.message.toString()))
                     }
             }
         }
@@ -85,16 +81,17 @@ class LoginActivity : AppCompatActivity() {
                         if (it.isSuccessful) {
                             email = it.result.user?.email ?: ""
                             val photoURI = it.result.user?.photoUrl ?: ""
-                            if(FirebaseAuth.getInstance().currentUser?.isEmailVerified!!) {
+                            if (FirebaseAuth.getInstance().currentUser?.isEmailVerified!!) {
                                 navegarPrincipal(email, photoURI.toString())
                             } else {
-                                binding.tvConfirmarEmail.text = "Confirme la verificación del correo electrónico"
+                                binding.tvConfirmarEmail.text =
+                                    "Confirme la verificación del correo electrónico"
                             }
                             //AuthUI.getInstance().signOut(this)
 
-                        } else {
-                            showAlert()
                         }
+                    }.addOnFailureListener {
+                        showAlert(it.message.toString())
                     }
             }
 
@@ -131,13 +128,13 @@ class LoginActivity : AppCompatActivity() {
                                 val email = it.result.user?.email ?: ""
                                 val photoURI = it.result.user?.photoUrl ?: ""
                                 navegarPrincipal(email, photoURI.toString())
-                            } else {
-                                showAlert()
                             }
+                        }.addOnFailureListener {
+                            showAlert(it.message.toString())
                         }
                 }
             } catch (e: ApiException) {
-                showAlert()
+                showAlert(e.message.toString())
             }
         }
     }
@@ -146,14 +143,14 @@ class LoginActivity : AppCompatActivity() {
         var emailCompletado = false
         var passwordCompletado = false
         val emailLayout = binding.emailLayout
-        val email = binding.emailEditText.text
+        val email = binding.emailEditText.text?.trim()
         val passwordLayout = binding.passwordLayout
         val password = binding.paswordEditText.text
 
         if (email.isNullOrEmpty()) {
             emailLayout.error = "Campo obligatorio"
 
-        } else if (!email.contains("@")) {
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailLayout.error = "Correo no válido"
         } else {
             emailLayout.error = null
@@ -180,10 +177,19 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    private fun showAlert() {
+    private fun showAlert(mensaje: String) {
+        Log.i("Fail", mensaje)
+        val mensajeError = when (mensaje) {
+            "The password is invalid or the user does not have a password." -> "La contraseña es inválida o el usuario no tiene contraseña"
+            "A network error (such as timeout, interrupted connection or unreachable host) has occurred." -> "Error de conexión"
+            "There is no user record corresponding to this identifier. The user may have been deleted." -> "El usuario no existe"
+            else -> {
+                mensaje
+            }
+        }
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Error")
-        builder.setMessage("Se ha producido un error autentificando al usuario")
+        builder.setMessage(mensajeError)
         builder.setPositiveButton("Aceptar", null)
         val dialog: AlertDialog = builder.create()
         dialog.show()

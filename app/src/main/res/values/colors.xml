@@ -8,6 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="verdeClaro">#80CB81</color>
+    <color name="blacoVerdoso">#e3f4e3</color>
     <color name="verdeClaroTransparencia">#8180CB81</color>
     <color name="errorColor">#CF6679</color>
     <color name="fondoGoogle">#EBEBEB</color>

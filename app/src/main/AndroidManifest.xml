@@ -14,14 +14,24 @@
     <application
         android:name=".BurparkingApp"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon_burcycle"
         android:label="@string/app_name"
         android:noHistory="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/icon_burcycle"
         android:supportsRtl="true"
         android:theme="@style/Theme.Burparking"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
+        <activity
+            android:name=".ui.view.SplashActivity"
+            android:exported="true"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.view.IncidenciaActivity"
             android:exported="false"
@@ -32,11 +42,7 @@
             android:exported="true"
             android:label="@string/title_activity_login"
             android:theme="@style/Theme.Burparking.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ui.view.MainActivity"

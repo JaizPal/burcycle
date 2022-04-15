@@ -57,10 +57,27 @@
         <argument
             android:name="parking"
             app:argType="com.example.burparking.domain.model.Parking" />
+        <action
+            android:id="@+id/action_informacionFragment_to_reporteFragment"
+            app:destination="@id/reporteFragment" />
     </fragment>
     <activity
         android:id="@+id/incidenciaActivity"
         android:name="com.example.burparking.ui.view.IncidenciaActivity"
         android:label="activity_incidencia"
         tools:layout="@layout/activity_incidencia" />
+    <fragment
+        android:id="@+id/reporteFragment"
+        android:name="com.example.burparking.ui.view.ReporteFragment"
+        android:label="fragment_reporte"
+        tools:layout="@layout/fragment_reporte" >
+        <argument
+            android:name="parking"
+            app:argType="com.example.burparking.domain.model.Parking" />
+        <action
+            android:id="@+id/action_reporteFragment_to_principalFragment"
+            app:destination="@id/principalFragment"
+            app:popUpTo="@id/principalFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

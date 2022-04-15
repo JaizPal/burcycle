@@ -38,7 +38,7 @@
                 android:id="@+id/emailEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#4DFFFFFF"
+                android:background="#80FFFFFF"
                 android:hint="email"
                 android:inputType="textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -63,7 +63,7 @@
                 android:id="@+id/paswordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#4DFFFFFF"
+                android:background="#80FFFFFF"
                 android:hint="contraseña"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
