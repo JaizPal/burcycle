@@ -51,7 +51,26 @@ class PrincipalFragment : Fragment() {
     }
 
     private fun navegarBuscarDireccion() {
+        aplicarAnimaciones()
         findNavController().navigate(R.id.action_principalFragment_to_buscarDireccionFragment)
+    }
+
+    private fun aplicarAnimaciones() {
+        binding.parte1.animate()
+            .alpha(0f)
+            .translationXBy(-1200f)
+            .duration = 400L
+        binding.parte2.animate()
+            .alpha(0f)
+            .translationXBy(-1200f)
+            .duration = 400L
+        binding.autor.animate()
+            .alpha(0f)
+            .translationXBy(1200f)
+            .duration = 400L
+        binding.buscarButton.animate()
+            .alpha(0f)
+            .duration = 400L
     }
 
 }

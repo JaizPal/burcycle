@@ -27,6 +27,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="irButton" parent="Widget.MaterialComponents.ExtendedFloatingActionButton.Icon">
+        <item name="android:minWidth">60dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:gravity">center_vertical|end</item>
+    </style>
+
     <!-- Your custom ActionBar Style -->
 
     <style name="CustomActionBar" parent="@style/Theme.AppCompat.Light.DarkActionBar">

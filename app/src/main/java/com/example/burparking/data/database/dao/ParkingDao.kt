@@ -12,9 +12,6 @@ interface ParkingDao {
     @Query("SELECT * FROM parking_table order by id LIMIT 15000")
     suspend fun getAllParkings(): List<ParkingEntity>
 
-//    @Query("SELECT * FROM parking_table WHERE ID = :idParking")
-//    suspend fun getParking(idParking: Int)
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(parkings: List<ParkingEntity>)
 

@@ -216,6 +216,7 @@ class MapFragment : Fragment() {
                 " "
             }).toString()
             binding.tvCapacidadMap.text = it.capacidad.toString()
+            Log.i("Dirtección", "Lon: " + it.lon + " Lat:" + it.lat )
         }
 
         binding.buttonClose.setOnClickListener {
@@ -265,7 +266,7 @@ class MapFragment : Fragment() {
         val providers = mLocationManager!!.getProviders(true)
         var bestLocation: Location? = null
         for (provider in providers) {
-            val l = mLocationManager!!.getLastKnownLocation(provider) ?: continue
+            val l = mLocationManager.getLastKnownLocation(provider) ?: continue
             if (bestLocation == null || l.accuracy < bestLocation.accuracy) {
                 // Found best last known location: %s", l);
                 bestLocation = l
@@ -287,7 +288,6 @@ class MapFragment : Fragment() {
 //        Log.i("Pro", (map.tileProvider.tileSource.toString() + map.tileProvider.tileCache.size))
 
         map.isTilesScaledToDpi = true
-
         map.zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
         map.setMultiTouchControls(true);
 
@@ -304,7 +304,7 @@ class MapFragment : Fragment() {
         val mapController = map.controller
         if (parkings.isEmpty()) {
             mapController.setZoom(17.0)
-            val startPoint = GeoPoint(42.340833, -3.699722)
+            val startPoint = GeoPoint(getLastKnownLocation()!!.latitude, getLastKnownLocation()!!.longitude)
             mapController.setCenter(startPoint)
         } else {
             mapController.setZoom(18.0)
@@ -378,22 +378,18 @@ class MapFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        MyLocationNewOverlay(GpsMyLocationProvider(requireContext()), map).onResume()
         map.onResume()
     }
 
     override fun onPause() {
         super.onPause()
         map.onPause()
+        MyLocationNewOverlay(GpsMyLocationProvider(requireContext()), map).onPause()
     }
 
     private fun setupOsmdroid() {
-//        with(getInstance()) {
-//            /*set user agent to prevent getting banned from the OSM servers*/
-//            userAgentValue = BuildConfig.APPLICATION_ID
-//            /*set the path for osmdroid's files (for example, tile cache)*/
-//            osmdroidBasePath = requireContext().getExternalFilesDir(null)
-//        }
-        Configuration.getInstance().userAgentValue = BuildConfig.APPLICATION_ID
+        getInstance().userAgentValue = BuildConfig.APPLICATION_ID
     }
 
     override fun onRequestPermissionsResult(

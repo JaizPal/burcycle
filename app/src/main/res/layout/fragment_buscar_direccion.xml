@@ -11,14 +11,16 @@
     tools:context=".ui.view.BuscarDireccionFragment">
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutAutoComplete"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:textColor="@color/texto">
 
-        <AutoCompleteTextView
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:id="@+id/autoCompleteDirecciones"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#80FFFFFF"

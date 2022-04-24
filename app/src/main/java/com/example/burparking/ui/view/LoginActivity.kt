@@ -9,6 +9,7 @@ import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.example.burparking.R
 import com.example.burparking.databinding.ActivityLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -18,6 +19,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -30,6 +33,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         val window = this.window
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         getWindow().statusBarColor = ContextCompat.getColor(this, R.color.verdeClaro)
@@ -44,7 +48,9 @@ class LoginActivity : AppCompatActivity() {
         val photoURI = prefs?.getString("photoURI", null)
         if (email != null && photoURI != null) {
             binding.inicioLayout.visibility = View.INVISIBLE
-            navegarPrincipal(email, photoURI.toString())
+            lifecycleScope.launch {
+                navegarPrincipal(email, photoURI.toString(), 0L)
+            }
         }
     }
 
@@ -52,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
 
         binding.registrarButton.setOnClickListener {
             if (comprobarCampos()) {
-                var email = binding.emailEditText.text.toString().trim().lowercase()
+                val email = binding.emailEditText.text.toString().trim().lowercase()
                 val password = binding.paswordEditText.text.toString().trim()
                 FirebaseAuth.getInstance()
                     .createUserWithEmailAndPassword(
@@ -82,19 +88,19 @@ class LoginActivity : AppCompatActivity() {
                             email = it.result.user?.email ?: ""
                             val photoURI = it.result.user?.photoUrl ?: ""
                             if (FirebaseAuth.getInstance().currentUser?.isEmailVerified!!) {
-                                navegarPrincipal(email, photoURI.toString())
+                                lifecycleScope.launch {
+                                    navegarPrincipal(email, photoURI.toString(), 300L)
+                                }
                             } else {
                                 binding.tvConfirmarEmail.text =
                                     "Confirme la verificación del correo electrónico"
+                                binding.tvConfirmarEmail.visibility = View.VISIBLE
                             }
-                            //AuthUI.getInstance().signOut(this)
-
                         }
                     }.addOnFailureListener {
                         showAlert(it.message.toString())
                     }
             }
-
         }
         binding.googleButton.setOnClickListener {
             val googleConf = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -104,13 +110,17 @@ class LoginActivity : AppCompatActivity() {
             googleClient.signOut()
             startActivityForResult(googleClient.signInIntent, GOOGLE_SIG_IN)
         }
+
+        binding.tvRecuperar.setOnClickListener {
+            navegarRecuperarPassword()
+        }
     }
 
     private fun mostrarSnackBar(mensaje: String) {
         Snackbar.make(
             this.findViewById(android.R.id.content),
             mensaje,
-            Snackbar.LENGTH_INDEFINITE
+            Snackbar.LENGTH_LONG
         ).show()
     }
 
@@ -127,7 +137,9 @@ class LoginActivity : AppCompatActivity() {
                             if (it.isSuccessful) {
                                 val email = it.result.user?.email ?: ""
                                 val photoURI = it.result.user?.photoUrl ?: ""
-                                navegarPrincipal(email, photoURI.toString())
+                                lifecycleScope.launch {
+                                    navegarPrincipal(email, photoURI.toString(), 300L)
+                                }
                             }
                         }.addOnFailureListener {
                             showAlert(it.message.toString())
@@ -167,14 +179,22 @@ class LoginActivity : AppCompatActivity() {
         return emailCompletado && passwordCompletado
     }
 
-    private fun navegarPrincipal(email: String, photoURI: String) {
+    private suspend fun navegarPrincipal(email: String, photoURI: String, delay: Long) {
+        aplicarAnimaciones()
+        delay(delay)
         val intent = Intent(this, MainActivity::class.java).apply {
             putExtra("email", email)
             putExtra("photoUri", photoURI)
         }
         startActivity(intent)
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         finish()
+    }
 
+    private fun navegarRecuperarPassword() {
+        val intent = Intent(this, RecuperarPasswordActivity::class.java)
+        startActivity(intent)
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
 
     private fun showAlert(mensaje: String) {
@@ -183,6 +203,7 @@ class LoginActivity : AppCompatActivity() {
             "The password is invalid or the user does not have a password." -> "La contraseña es inválida o el usuario no tiene contraseña"
             "A network error (such as timeout, interrupted connection or unreachable host) has occurred." -> "Error de conexión"
             "There is no user record corresponding to this identifier. The user may have been deleted." -> "El usuario no existe"
+            "12501: " -> "Inicio de sesión cancelado"
             else -> {
                 mensaje
             }
@@ -194,4 +215,29 @@ class LoginActivity : AppCompatActivity() {
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
+
+    private fun aplicarAnimaciones() {
+        binding.emailLayout.animate()
+            .alpha(0f)
+            .translationXBy(1200f)
+            .duration = 400L
+        binding.passwordLayout.animate()
+            .alpha(0f)
+            .translationXBy(-1200f)
+            .duration = 400L
+        binding.tvRecuperar.animate()
+            .alpha(0F)
+            .translationXBy(1200f)
+            .duration = 400L
+        binding.registrarButton.animate()
+            .translationXBy(-1200f)
+            .duration = 400L
+        binding.accederButton.animate()
+            .translationXBy(1200f)
+            .duration = 400L
+        binding.googleButton.animate()
+            .alpha(0F)
+            .duration = 400L
+    }
+
 }

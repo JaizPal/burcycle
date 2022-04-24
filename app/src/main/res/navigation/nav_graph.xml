@@ -17,7 +17,11 @@
             app:argType="string" />
         <action
             android:id="@+id/action_principalFragment_to_buscarDireccionFragment"
-            app:destination="@id/buscarDireccionFragment" />
+            app:destination="@id/buscarDireccionFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
         <action
             android:id="@+id/action_principalFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
@@ -29,10 +33,18 @@
         tools:layout="@layout/fragment_buscar_direccion" >
         <action
             android:id="@+id/action_buscarDireccionFragment_to_mapFragment"
-            app:destination="@id/mapFragment" />
+            app:destination="@id/mapFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
         <action
             android:id="@+id/action_buscarDireccionFragment_to_informacionFragment"
-            app:destination="@id/informacionFragment" />
+            app:destination="@id/informacionFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
@@ -47,7 +59,11 @@
             app:argType="com.example.burparking.domain.model.Parking[]" />
         <action
             android:id="@+id/action_mapFragment_to_informacionFragment"
-            app:destination="@id/informacionFragment" />
+            app:destination="@id/informacionFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/informacionFragment"
@@ -59,7 +75,11 @@
             app:argType="com.example.burparking.domain.model.Parking" />
         <action
             android:id="@+id/action_informacionFragment_to_reporteFragment"
-            app:destination="@id/reporteFragment" />
+            app:destination="@id/reporteFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
     <activity
         android:id="@+id/incidenciaActivity"

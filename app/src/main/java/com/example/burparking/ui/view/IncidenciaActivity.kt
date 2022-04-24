@@ -49,7 +49,7 @@ class IncidenciaActivity : AppCompatActivity() {
         if (parking == null) {
             Snackbar.make(
                 this.findViewById(android.R.id.content),
-                "Si deseas enviar una incidencia de un aparcamiento hágalo seleccionándolo en el mapa",
+                "Si deseas enviar una incidencia de un aparcamiento, hágalo seleccionándolo en el mapa",
                 Snackbar.LENGTH_LONG
             ).show()
         }
@@ -89,8 +89,11 @@ class IncidenciaActivity : AppCompatActivity() {
                     Snackbar.LENGTH_SHORT
                 ).show()
             }
-
         }
+    }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
     }
 }

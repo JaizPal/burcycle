@@ -3,7 +3,6 @@ package com.example.burparking.ui.view
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -13,7 +12,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -21,12 +19,9 @@ import com.example.burparking.R
 import com.example.burparking.databinding.ActivityMainBinding
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
-import org.osmdroid.config.Configuration
-import org.osmdroid.library.BuildConfig
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -38,6 +33,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
 //        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         val bundle = intent.extras
         val email = bundle?.getString("email")
@@ -56,23 +52,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         getWindow().statusBarColor = ContextCompat.getColor(this, R.color.verdeClaro)
         supportActionBar?.setDisplayShowTitleEnabled(false);
-
-
-//        setSupportActionBar(binding.toolbar)
-//
-//        val navController = findNavController(R.id.nav_host_fragment_content_main)
-//        appBarConfiguration = AppBarConfiguration(navController.graph)
-//        setupActionBarWithNavController(navController, appBarConfiguration)
-
     }
-
-
-
-
-//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//        menuInflater.inflate(R.menu.activity_main_drawer, menu)
-//        return true
-//    }
 
     private fun guardarDatosUsuario(email: String, photoURI: String) {
         val prefs = getSharedPreferences("inicioSesion", Context.MODE_PRIVATE).edit()
@@ -87,20 +67,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val correo = header.findViewById<TextView>(R.id.textView)
         correo.text = email.toString()
         val imagenURL = Uri.parse(photoURI)
-        Picasso.get().load(imagenURL).resize(220,220).transform(CropCircleTransformation()).into(imagen)
+        Picasso.get().load(imagenURL)
+            .resize(220, 220)
+            .transform(CropCircleTransformation())
+            .into(imagen)
 
     }
-
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when (item.itemId){
-//            R.id.nav_cerrar_sesion -> cerrarSesion()
-//        }
-//        return true
-////        return when (item.itemId) {
-////            R.id.action_settings -> true
-////            else -> super.onOptionsItemSelected(item)
-////        }
-//    }
 
     private fun cerrarSesion(): Boolean {
         val prefs = this.getSharedPreferences("inicioSesion", Context.MODE_PRIVATE)!!.edit()
@@ -114,7 +86,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun irIncidencia(): Boolean {
         binding.drawerLayout.closeDrawers()
-        val intent = Intent(this, IncidenciaActivity::class.java).apply {  }
+        val intent = Intent(this, IncidenciaActivity::class.java).apply { }
         startActivity(intent)
 
         return true
@@ -123,13 +95,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return NavigationUI.navigateUp(navController, binding.drawerLayout)
-//        val navController = findNavController(R.id.nav_host_fragment_content_main)
-//        return navController.navigateUp(appBarConfiguration)
-//                || super.onSupportNavigateUp()
     }
 
-    private fun navegarLogin(){
-        val intent = Intent(this, LoginActivity::class.java).apply {  }
+    private fun navegarLogin() {
+        val intent = Intent(this, LoginActivity::class.java).apply { }
         AuthUI.getInstance().signOut(this)
         startActivity(intent)
         finish()
@@ -137,13 +106,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         Log.i("Algo", item.itemId.toString() + " Jaime")
-        when (item.itemId){
+        when (item.itemId) {
             R.id.nav_cerrar_sesion -> cerrarSesion()
             R.id.incidenciaActivity -> irIncidencia()
         }
 
         return true
     }
-
-
 }

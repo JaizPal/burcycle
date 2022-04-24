@@ -2,6 +2,7 @@ package com.example.burparking.ui.view
 
 import android.Manifest.permission.*
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.LocationManager
@@ -12,6 +13,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -60,6 +62,12 @@ class BuscarDireccionFragment : Fragment() {
     ): View? {
         _binding = FragmentBuscarDireccionBinding.inflate(inflater, container, false)
         verificarPermisos()
+        localizacionUsuario =
+            LocationServices.getFusedLocationProviderClient(requireActivity())
+        localizacionUsuario.getCurrentLocation(
+            LocationRequest.PRIORITY_HIGH_ACCURACY,
+            CancellationTokenSource().token
+        )
         val autoCompletado = binding.autoCompleteDirecciones
         buscarDireccionViewModel.isLoading.observe(requireActivity()) {
             if(it) {
@@ -84,23 +92,8 @@ class BuscarDireccionFragment : Fragment() {
         autoCompletado.setOnItemClickListener { parent, view, position, id ->
             buscarDireccionViewModel.parkingCercanos(adapterDirecciones.getItem(position)!!)
             direccionActual = adapterDirecciones.getItem(position)
+            bajarTeclado()
         }
-
-//        buscarDireccionViewModel.parkingCargados.observe(requireActivity()) {
-//            if(it == false) {
-//                binding.shimmer.startShimmer()
-//                binding.shimmer.visibility = View.VISIBLE
-//                binding.recyclerViewParking.visibility = View.GONE
-//            }
-//            if (it == true && !binding.autoCompleteDirecciones.text.isNullOrEmpty()) {
-//                //cargarCardsParkings()
-//                binding.shimmer.visibility = View.GONE
-//                binding.shimmer.stopShimmer()
-//                binding.recyclerViewParking.visibility = View.VISIBLE
-//                Log.i("He pasado", "He pasado")
-//            }
-//
-//        }
 
         buscarDireccionViewModel.nParking.observe(requireActivity()) {
             if(it == 10) {
@@ -116,6 +109,7 @@ class BuscarDireccionFragment : Fragment() {
         }
 
         binding.tvVerMapa.setOnClickListener {
+            aplicarAnimaciones()
             findNavController().navigate(
                 BuscarDireccionFragmentDirections.actionBuscarDireccionFragmentToMapFragment(
                     Direccion(0, 42.340833, -3.699722, null, null, null),
@@ -125,6 +119,7 @@ class BuscarDireccionFragment : Fragment() {
         }
 
         binding.tvUbicacionActual.setOnClickListener {
+            bajarTeclado()
             buscarDireccionViewModel.nParking.postValue(0)
             verificarPermisos()
             if (permisosConcedidos) {
@@ -247,12 +242,39 @@ class BuscarDireccionFragment : Fragment() {
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 
+    private fun bajarTeclado() {
+        val imm = activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        var view = activity?.currentFocus
+        if(view == null) {
+            view = View(activity)
+        }
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
 
     override fun onPause() {
         super.onPause()
         buscarDireccionViewModel.parkingCargados.value = null
         binding.shimmer.visibility = View.GONE
         binding.autoCompleteDirecciones.setText("")
+    }
+
+    private fun aplicarAnimaciones() {
+        binding.tvVerMapa.animate()
+            .alpha(0f)
+            .translationXBy(1200f)
+            .duration = 400L
+        binding.tvUbicacionActual.animate()
+            .alpha(0f)
+            .translationXBy(-1200f)
+            .duration = 400L
+        binding.recyclerViewParking.animate()
+            .alpha(0f)
+            .duration = 400L
+        binding.layoutAutoComplete.animate()
+            .alpha(0f)
+            .translationY(-1000f)
+            .duration = 400L
     }
 
 }

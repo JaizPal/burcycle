@@ -8,7 +8,9 @@ import com.example.burparking.R
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         startActivity(Intent(this, LoginActivity::class.java))
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         finish()
     }
 }

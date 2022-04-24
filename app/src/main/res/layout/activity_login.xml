@@ -28,6 +28,7 @@
             android:layout_height="match_parent"
             android:textColorHint="@color/texto"
             app:boxStrokeColor="@color/texto"
+
             app:endIconMode="clear_text"
             app:errorEnabled="true"
             app:hintTextColor="@color/texto"
@@ -66,18 +67,26 @@
                 android:background="#80FFFFFF"
                 android:hint="contraseña"
                 android:inputType="textPassword" />
+
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tvRecuperar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_weight="1"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:text="¿Has olvidado la contraseña?" />
 
         <TextView
             android:id="@+id/tvConfirmarEmail"
             android:layout_width="match_parent"
             android:layout_height="34dp"
-            android:textColor="@color/errorColor" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="8dp"
-            android:layout_weight="1" />
+            android:textColor="@color/errorColor"
+            android:visibility="gone"
+            tools:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -86,6 +95,10 @@
 
             <Button
                 android:id="@+id/registrarButton"
+                style="?attr/materialButtonOutlinedStyle"
+                app:shapeAppearance="?attr/shapeAppearanceSmallComponent"
+                app:backgroundTint="@color/blacoVerdoso"
+                android:elevation="4dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -99,6 +112,10 @@
 
             <Button
                 android:id="@+id/accederButton"
+                style="?attr/materialButtonOutlinedStyle"
+                app:shapeAppearance="?attr/shapeAppearanceSmallComponent"
+                app:backgroundTint="@color/blacoVerdoso"
+                android:elevation="4dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -116,6 +133,7 @@
             style="@style/googleButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:elevation="4dp"
             android:drawableLeft="@drawable/googleg_disabled_color_18"
             android:text="Google"
             android:textAlignment="textStart" />

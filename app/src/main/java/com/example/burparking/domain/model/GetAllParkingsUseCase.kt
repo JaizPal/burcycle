@@ -12,9 +12,6 @@ class GetAllParkingsUseCase @Inject constructor(private val repository: ParkingR
             parkings = repository.getAllParkingsFromApi()
             repository.insertParkings(parkings.map { it.toDatabase() })
             parkings
-//            repository.clearParkings()
-//            repository.insertParkings(parkings.map{it.toDatabase()})
-//            parkings
         } else {
             repository.getAllParkingsFromDatabase()
         }

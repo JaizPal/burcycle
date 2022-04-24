@@ -2,7 +2,6 @@ package com.example.burparking.ui.viewModel
 
 import android.content.Context
 import android.graphics.Color
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,7 +22,7 @@ import javax.inject.Inject
 class MapViewModel @Inject constructor(
     private val getAllParkingsUseCase: GetAllParkingsUseCase,
     private val getReverseDireccionUseCase: GetReverseDireccionUseCase
-): ViewModel() {
+) : ViewModel() {
     val parkings = MutableLiveData<List<Parking>>()
     var parkingCargados = MutableLiveData<Boolean>()
     var parkingPulsado = MutableLiveData<Parking>()
@@ -48,7 +47,7 @@ class MapViewModel @Inject constructor(
                 reverseDireccion.calle,
                 reverseDireccion.codigoPostal
             )
-            if(parking.direccion!!.calle.isNullOrEmpty() || parking.direccion!!.numero.isNullOrEmpty()) {
+            if (parking.direccion!!.calle.isNullOrEmpty() || parking.direccion!!.numero.isNullOrEmpty()) {
                 parking.direccion!!.calle = reverseDireccion.name
             }
             parkingPulsado.value = parking
@@ -56,18 +55,17 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    fun setParking(id: Long){
-       establecerDireccion(parkings.value?.find{it.id == id}!!)
+    fun setParking(id: Long) {
+        establecerDireccion(parkings.value?.find { it.id == id }!!)
     }
 
     fun setRoad(geoPoints: ArrayList<GeoPoint>, map: MapView, context: Context) {
         viewModelScope.launch {
-            val roadManager: RoadManager = OSRMRoadManager(context, Configuration.getInstance().userAgentValue)
+            val roadManager: RoadManager =
+                OSRMRoadManager(context, Configuration.getInstance().userAgentValue)
             (roadManager as OSRMRoadManager).setMean(OSRMRoadManager.MEAN_BY_BIKE)
             val road = roadManager.getRoad(geoPoints)
             val roadOverlay = RoadManager.buildRoadOverlay(road)
-            // TODO Comprobar las nuevas distancias
-            parkingPulsado.value?.distancia = roadOverlay.distance.toFloat()
             roadOverlay.width = 12.0f
             roadOverlay.color = Color.parseColor("#03adfc")
             map.overlays.add(roadOverlay)

@@ -16,6 +16,7 @@
         android:clickable="true"
         android:contentDescription="@string/leyenda"
         android:focusable="true"
+        app:tint="@color/white"
         android:src="@drawable/ic_information_outline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -119,6 +120,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:gravity="center"
                 android:padding="10dp"
                 android:textColor="@color/texto"
                 android:textSize="18sp"
@@ -156,7 +158,10 @@
 
             <Button
                 android:id="@+id/buttonIrMap"
-                style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton.Icon"
+                style="?attr/materialButtonOutlinedStyle"
+                android:backgroundTint="@color/verdeClaro"
+                app:shapeAppearance="?attr/shapeAppearanceLargeComponent"
+                app:strokeColor="@color/verdeClaro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"

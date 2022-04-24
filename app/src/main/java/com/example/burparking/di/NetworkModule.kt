@@ -39,7 +39,7 @@ object NetworkModule {
     @Named("photon")
     fun provideReverseRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://photon.komoot.io/")
+                .baseUrl("https://photon.komoot.io/")
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

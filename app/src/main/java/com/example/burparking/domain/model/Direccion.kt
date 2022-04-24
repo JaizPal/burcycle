@@ -24,23 +24,9 @@ data class Direccion(
     }
 
     override fun toString(): String {
-//        return (calle ?: "") + " " + (numero ?: "") + " " + (codigoPostal ?: "")
-//        return if (!calle.isNullOrEmpty()) {
-//            if (!numero.isNullOrEmpty()) {
-//                if (!codigoPostal.isNullOrEmpty()) {
-//                    "$calle $numero $codigoPostal"
-//                } else {
-//                    "$calle $numero"
-//                }
-//            } else {
-//                calle
-//            }
-//        } else {
-//            " "
-//        }
-        return if(!calle.isNullOrEmpty()) {
-            if(!numero.isNullOrEmpty()) {
-                if(!codigoPostal.isNullOrEmpty()) {
+        return if (!calle.isNullOrEmpty()) {
+            if (!numero.isNullOrEmpty()) {
+                if (!codigoPostal.isNullOrEmpty()) {
                     calle!! + " " + numero + " " + codigoPostal
                 } else {
                     calle!! + " " + numero

@@ -8,7 +8,7 @@ import com.example.burparking.data.database.entities.DireccionEntity
 
 
 @Dao
-interface DireccionDao{
+interface DireccionDao {
 
     @Query("SELECT * FROM direccion_table order by id")
     suspend fun getAllDirecciones(): List<DireccionEntity>

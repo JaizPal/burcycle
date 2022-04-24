@@ -7,12 +7,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class ReverseDireccionService @Inject constructor(private val api: ReverseDireccionApiClient) {
+    class ReverseDireccionService @Inject constructor(private val api: ReverseDireccionApiClient) {
 
-    suspend fun getReverseDirecciones(lon: Double, lat: Double): ReverseDireccionFeaturesModel {
-        return withContext(Dispatchers.IO) {
-            val response = api.getReverseDireccion(lon, lat)
-            response.body() ?: ReverseDireccionFeaturesModel(emptyList())
+        suspend fun getReverseDirecciones(lon: Double, lat: Double): ReverseDireccionFeaturesModel {
+            return withContext(Dispatchers.IO) {
+                val response = api.getReverseDireccion(lon, lat)
+                response.body() ?: ReverseDireccionFeaturesModel(emptyList())
+            }
         }
     }
-}

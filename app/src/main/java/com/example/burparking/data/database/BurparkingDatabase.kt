@@ -13,5 +13,4 @@ abstract class BurparkingDatabase: RoomDatabase() {
 
     abstract fun getParkingDao(): ParkingDao
     abstract fun getDireccionDao(): DireccionDao
-
 }

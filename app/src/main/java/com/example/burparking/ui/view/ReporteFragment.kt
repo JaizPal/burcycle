@@ -55,6 +55,7 @@ class ReporteFragment : Fragment() {
             putExtra("parking", parking)
         }
         startActivity(intent)
+        requireActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
 
     private fun addReporte() {
