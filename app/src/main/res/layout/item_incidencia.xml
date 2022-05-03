@@ -21,14 +21,16 @@
 
     <TextView
         android:id="@+id/tvDescripcionIncidencia"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="start"
         android:paddingStart="20dp"
         android:paddingTop="20dp"
         android:paddingEnd="20dp"
         android:textAlignment="textStart"
         android:textColor="@color/texto"
         android:textSize="18sp"
+        app:flow_horizontalAlign="start"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvFechaIncidencia"
@@ -49,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingEnd="20dp"
-        tools:text="Error ubicación"
         app:layout_constraintBaseline_toBaselineOf="@+id/tvFechaIncidencia"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Error ubicación" />
 </androidx.constraintlayout.widget.ConstraintLayout>

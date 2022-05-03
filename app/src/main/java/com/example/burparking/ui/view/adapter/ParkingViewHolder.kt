@@ -20,7 +20,6 @@ class ParkingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun render(parking: Parking, direccionActual: Direccion) {
         binding.tvCapacidadParking.text = "Capacidad: " + parking.capacidad.toString()
         binding.tvDistancia.text = "Distancia: " + parking.distancia?.toInt().toString() + " metros"
-//        binding.tvDireccion.text = parking.direccion.toString()
         binding.tvDireccion.text =
             (if (!parking.direccion?.calle.isNullOrEmpty()) {
                 if (!parking.direccion?.numero.isNullOrEmpty()) {

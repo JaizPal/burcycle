@@ -92,9 +92,7 @@ class LoginActivity : AppCompatActivity() {
                                     navegarPrincipal(email, photoURI.toString(), 300L)
                                 }
                             } else {
-                                binding.tvConfirmarEmail.text =
-                                    "Confirme la verificación del correo electrónico"
-                                binding.tvConfirmarEmail.visibility = View.VISIBLE
+                                showAlert("Confirme la verificación del correo electrónico")
                             }
                         }
                     }.addOnFailureListener {
@@ -203,6 +201,7 @@ class LoginActivity : AppCompatActivity() {
             "The password is invalid or the user does not have a password." -> "La contraseña es inválida o el usuario no tiene contraseña"
             "A network error (such as timeout, interrupted connection or unreachable host) has occurred." -> "Error de conexión"
             "There is no user record corresponding to this identifier. The user may have been deleted." -> "El usuario no existe"
+            "The email address is already in use by another account." -> "La cuenta ya existe."
             "12501: " -> "Inicio de sesión cancelado"
             else -> {
                 mensaje

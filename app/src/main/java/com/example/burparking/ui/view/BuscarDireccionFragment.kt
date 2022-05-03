@@ -116,6 +116,8 @@ class BuscarDireccionFragment : Fragment() {
                     arrayOf()
                 )
             )
+            Log.i("Número de Aparcamientos: ", buscarDireccionViewModel.parkings.value?.count().toString())
+            Log.i("Número de Direcciones: ", buscarDireccionViewModel.direcciones.value?.count().toString())
         }
 
         binding.tvUbicacionActual.setOnClickListener {

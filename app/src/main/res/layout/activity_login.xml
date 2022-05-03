@@ -80,14 +80,6 @@
             android:paddingBottom="15dp"
             android:text="¿Has olvidado la contraseña?" />
 
-        <TextView
-            android:id="@+id/tvConfirmarEmail"
-            android:layout_width="match_parent"
-            android:layout_height="34dp"
-            android:textColor="@color/errorColor"
-            android:visibility="gone"
-            tools:visibility="gone" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

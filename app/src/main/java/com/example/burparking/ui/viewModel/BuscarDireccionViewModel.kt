@@ -57,16 +57,6 @@ class BuscarDireccionViewModel @Inject constructor(
         }
     }
 
-//    fun buscarParkings(direccion: Direccion) {
-//        viewModelScope.launch {
-//            isLoading.postValue(true)
-//            closestParkings.value = getClosestParkingsUseCase(direccion.lat, direccion.lon)
-//            isLoading.postValue(false)
-//            closestParkings.value?.forEach { p -> establecerDistancia(direccion, p) }
-//            closestParkings.postValue(closestParkings.value?.sortedBy { it.distancia })
-//        }
-//    }
-
     fun establecerDistancia(direccion: Direccion, parking: Parking) {
         val distancia: FloatArray = floatArrayOf(0f)
         Location.distanceBetween(direccion.lat, direccion.lon, parking.lat, parking.lon, distancia)
@@ -85,6 +75,7 @@ class BuscarDireccionViewModel @Inject constructor(
                 reverseDireccion.calle,
                 reverseDireccion.codigoPostal
             )
+
             if(parking.direccion!!.calle.isNullOrEmpty() || parking.direccion!!.numero.isNullOrEmpty()) {
                 parking.direccion!!.calle = reverseDireccion.name
             }
