@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1050017596567",
+    "firebase_url": "https://burparking-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "burparking",
     "storage_bucket": "burparking.appspot.com"
   },
@@ -14,7 +15,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "1050017596567-0no1tqohn65u5f4rg80jdqp6bbe7bt80.apps.googleusercontent.com",
+          "client_id": "1050017596567-6e7rk707b2avtcra5i0d1dkvk9eahdbd.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.burparking",
