@@ -4,7 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Jaich/AndroidStudioProjects/Burcycle/app/src/main/res/layout/activity_recuperar_password.xml" value="0.23981481481481481" />
+        <entry key="..\:/Users/Jaich/AndroidStudioProjects/Burcycle/app/src/main/res/layout/fragment_buscar_direccion.xml" value="0.38697916666666665" />
         <entry key="..\:/Users/Jaich/AndroidStudioProjects/Burcycle/app/src/main/res/layout/fragment_informacion.xml" value="0.23981481481481481" />
+        <entry key="..\:/Users/Jaich/AndroidStudioProjects/Burcycle/app/src/main/res/layout/item_parking.xml" value="0.38697916666666665" />
         <entry key="..\:/Users/Jaich/AndroidStudioProjects/Burparking/app/src/main/res/drawable-v24/ic_burparking_background.xml" value="0.329" />
         <entry key="..\:/Users/Jaich/AndroidStudioProjects/Burparking/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2625" />
         <entry key="..\:/Users/Jaich/AndroidStudioProjects/Burparking/app/src/main/res/drawable/background.xml" value="0.33" />
