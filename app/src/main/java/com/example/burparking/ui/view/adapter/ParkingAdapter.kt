@@ -8,6 +8,11 @@ import com.example.burparking.R
 import com.example.burparking.domain.model.Direccion
 import com.example.burparking.domain.model.Parking
 
+/*
+ * Clase que extiende de RecyclerView.Adapter<ParkingViewHolder>()
+ * para implementar el RecycleView que se muestra en la ventana de
+ * BuscarDireccionFragment
+ */
 class ParkingAdapter(val parkings: List<Parking>, private val direccionActual: Direccion): RecyclerView.Adapter<ParkingViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ParkingViewHolder {

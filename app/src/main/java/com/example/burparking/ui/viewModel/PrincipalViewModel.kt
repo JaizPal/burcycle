@@ -19,13 +19,13 @@ class PrincipalViewModel @Inject constructor(): ViewModel() {
     var parte2 = MutableLiveData<String?>()
     var autor = MutableLiveData<String?>()
 
+    /*
+     * Descarga las frases de la BBDD y las guarda en this.frases
+     */
     fun onCreate() {
         db.collection("frases").document("O1BAXWjN6Lsg90PNA6hi").get().addOnSuccessListener {
-//            frases.add(Frase(it.getString("parte1"), it.getString("parte2"), it.getString("parte3"), it.getString("autor")))
             frasesRaw.value = it.get("frases") as List<HashMap<String, String>>
-            Log.i("FraseA", frasesRaw.value?.size.toString())
             frasesRaw.value?.forEach{
-                Log.i("Frase", it.toString())
                 frases.add(
                     Frase(
                         it.getValue("parte1"),
@@ -36,18 +36,17 @@ class PrincipalViewModel @Inject constructor(): ViewModel() {
             }
             setFrase()
         }
-
     }
 
+    /*
+     * Recupera una frase aleatoria de this.frases
+     * y establece sus diferentes partes y autor.
+     */
     private fun setFrase() {
-
-            val fraseAleatoria = frases.random()
-            parte1.value = fraseAleatoria.parte1
-            parte2.value = fraseAleatoria.parte2
-            autor.value = fraseAleatoria.autor
-
-
-
+        val fraseAleatoria = frases.random()
+        parte1.value = fraseAleatoria.parte1
+        parte2.value = fraseAleatoria.parte2
+        autor.value = fraseAleatoria.autor
     }
 
 }

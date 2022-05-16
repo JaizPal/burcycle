@@ -13,7 +13,6 @@ import android.os.StrictMode.ThreadPolicy
 import android.preference.PreferenceManager
 import android.transition.AutoTransition
 import android.transition.TransitionManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +28,6 @@ import com.example.burparking.domain.model.Direccion
 import com.example.burparking.domain.model.Parking
 import com.example.burparking.ui.viewModel.MapViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import org.osmdroid.config.Configuration
 import org.osmdroid.config.Configuration.getInstance
 import org.osmdroid.tileprovider.tilesource.ThunderforestTileSource
 import org.osmdroid.util.GeoPoint
@@ -52,7 +50,6 @@ class MapFragment : Fragment() {
     lateinit var map: MapView
     private lateinit var parkings: Array<Parking>
     private var direccionActual: Direccion? = null
-    private val apiKey = "c8fa4a1f921d4384b4e755f57c8e668d"
 
     private val mapViewModel: MapViewModel by viewModels()
 
@@ -94,17 +91,15 @@ class MapFragment : Fragment() {
         copyrightOverlay.setAlignRight(true)
         map.overlays.add(copyrightOverlay)
 
-        Log.i("Provider", map.tileProvider.tileSource.name())
-
-
-
-
+        /*
+         * Recupera los aparcamientos mandados por parámetros en la navegación
+         */
         parkings = MapFragmentArgs.fromBundle(requireArguments()).parkings
         direccionActual = MapFragmentArgs.fromBundle(requireArguments()).direccionActual
         getInstance().load(
             requireContext(),
             PreferenceManager.getDefaultSharedPreferences(requireContext())
-        );
+        )
         configureMap()
         if (parkings.isEmpty()) {
             mapViewModel.parkingCargados.observe(requireActivity()) {
@@ -216,7 +211,6 @@ class MapFragment : Fragment() {
                 " "
             }).toString()
             binding.tvCapacidadMap.text = it.capacidad.toString()
-            Log.i("Dirtección", "Lon: " + it.lon + " Lat:" + it.lat )
         }
 
         binding.buttonClose.setOnClickListener {
@@ -250,7 +244,9 @@ class MapFragment : Fragment() {
         return binding.root
     }
 
-
+    /*
+     * Establece la ruta al aparcamiento
+     */
     private fun setRoad(point: GeoPoint) {
         val wayPoints = arrayListOf<GeoPoint>()
         val localizacionActual = getLastKnownLocation()
@@ -259,6 +255,9 @@ class MapFragment : Fragment() {
         mapViewModel.setRoad(wayPoints, map, requireContext())
     }
 
+    /*
+ * Recupera la última localización concida del usuaria y devuelve
+ */
     @SuppressLint("MissingPermission")
     private fun getLastKnownLocation(): Location? {
         val mLocationManager =
@@ -268,13 +267,20 @@ class MapFragment : Fragment() {
         for (provider in providers) {
             val l = mLocationManager.getLastKnownLocation(provider) ?: continue
             if (bestLocation == null || l.accuracy < bestLocation.accuracy) {
-                // Found best last known location: %s", l);
                 bestLocation = l
             }
         }
         return bestLocation
     }
 
+    /*
+     * Realiza la configuración del mapa:
+     *  - establece el zoom
+     *  - activa el escalado de los tiles
+     *  - desactiva los botones del zoom
+     *  - activa el multitouch
+     *  - activa la visualización del la ubicación del usuario
+     */
     private fun configureMap() {
         setZoomMap()
 //        val tileSource = XYTileSource(
@@ -289,22 +295,26 @@ class MapFragment : Fragment() {
 
         map.isTilesScaledToDpi = true
         map.zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
-        map.setMultiTouchControls(true);
+        map.setMultiTouchControls(true)
 
         val locationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(requireContext()), map)
-        // No funciona
-        // locationOverlay.setPersonIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_person))
         locationOverlay.enableMyLocation()
         map.overlays.add(locationOverlay)
         map.invalidate()
 
     }
 
+    /*
+     * Establece el zoom y el centrado del mapa
+     * según si el usuario ha navegado desde un aparcamiento
+     * específico o no
+     */
     private fun setZoomMap() {
         val mapController = map.controller
         if (parkings.isEmpty()) {
             mapController.setZoom(17.0)
-            val startPoint = GeoPoint(getLastKnownLocation()!!.latitude, getLastKnownLocation()!!.longitude)
+            val startPoint =
+                GeoPoint(getLastKnownLocation()!!.latitude, getLastKnownLocation()!!.longitude)
             mapController.setCenter(startPoint)
         } else {
             mapController.setZoom(18.0)
@@ -349,7 +359,7 @@ class MapFragment : Fragment() {
         val dg = Color.green(destinationColor)
         val db = Color.blue(destinationColor)
         val drf = dr / 255f
-        val dgf = dg / 255f;
+        val dgf = dg / 255f
         val dbf = db / 255f
         val tintMatrix = ColorMatrix(
             floatArrayOf(
@@ -397,18 +407,18 @@ class MapFragment : Fragment() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        val permissionsToRequest = ArrayList<String>();
-        var i = 0;
+        val permissionsToRequest = ArrayList<String>()
+        var i = 0
         while (i < grantResults.size) {
-            permissionsToRequest.add(permissions[i]);
-            i++;
+            permissionsToRequest.add(permissions[i])
+            i++
         }
         if (permissionsToRequest.size > 0) {
             ActivityCompat.requestPermissions(
                 requireActivity(),
                 permissionsToRequest.toTypedArray(),
                 REQUEST_PERMISSIONS_REQUEST_CODE
-            );
+            )
         }
     }
 

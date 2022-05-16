@@ -22,9 +22,14 @@ class RecuperarPasswordActivity : AppCompatActivity() {
         val window = this.window
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         getWindow().statusBarColor = ContextCompat.getColor(this, R.color.verdeClaro)
-        supportActionBar?.setDisplayShowTitleEnabled(false);
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         setContentView(binding.root)
 
+        /*
+         * Listener del botón enviar.
+         * Si se produce un error muestra una alerta
+         * sino navega a la ventana anterior
+         */
         binding.enviarButton.setOnClickListener {
             if (comprobarEmail()) {
                 FirebaseAuth.getInstance().sendPasswordResetEmail(
@@ -37,13 +42,16 @@ class RecuperarPasswordActivity : AppCompatActivity() {
                     ).show()
                     finish()
                 }.addOnFailureListener {
-                    Log.i("Fail", it.message.toString())
                     showAlert(it.message.toString())
                 }
             }
         }
     }
 
+    /*
+     * Comprueba que el email introducido es correcto
+     * mostrando los errores pertinentes.
+     */
     private fun comprobarEmail(): Boolean {
         val emailLayout = binding.emailLayout
         val email = binding.emailEditText.text?.trim()
@@ -62,6 +70,9 @@ class RecuperarPasswordActivity : AppCompatActivity() {
         return emailCorrecto
     }
 
+    /*
+     * Muestra una alerta con el mensaje mandado por parámetros
+     */
     private fun showAlert(mensaje: String) {
         val mensajeError = when (mensaje) {
             "A network error (such as timeout, interrupted connection or unreachable host) has occurred." -> "Error de conexión"

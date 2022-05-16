@@ -41,11 +41,17 @@ class IncidenciaActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         incidenciaViewModel.onCreate()
+        /*
+         * Recupera el argumento parking de la navegación
+         */
         parking = intent.extras?.get("parking") as? Parking
         val window = this.window
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         getWindow().statusBarColor = ContextCompat.getColor(this, R.color.verdeClaro)
 
+        /*
+         * Si el argumento parking es null, se le muestra un mensaje
+         */
         if (parking == null) {
             Snackbar.make(
                 this.findViewById(android.R.id.content),
@@ -54,6 +60,9 @@ class IncidenciaActivity : AppCompatActivity() {
             ).show()
         }
 
+        /*
+         * Se define los tipos de las incidencias cuando están cargadas de la BBDD
+         */
         incidenciaViewModel.tiposIncidencias.observe(this) {
             if (!it.isNullOrEmpty()) {
                 val adapter = ArrayAdapter(
@@ -69,6 +78,10 @@ class IncidenciaActivity : AppCompatActivity() {
             }
         }
 
+        /*
+         * Cuando se pulsa el botón de enviar se llama al método encargado
+         * de añadir la incidencia a la BBDD
+         */
         binding.enviarButton.setOnClickListener {
             incidenciaViewModel.addIncidencia(
                 binding.descripcion.text.toString(),
@@ -92,6 +105,10 @@ class IncidenciaActivity : AppCompatActivity() {
         }
     }
 
+    /*
+     * Permite que al pulsar o al hacer el gesto de ir atrás
+     * vuelva mediante una animación
+     */
     override fun onBackPressed() {
         super.onBackPressed()
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)

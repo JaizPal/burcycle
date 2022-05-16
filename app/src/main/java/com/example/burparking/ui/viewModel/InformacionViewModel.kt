@@ -29,6 +29,9 @@ class InformacionViewModel @Inject constructor() : ViewModel() {
     var incidenciasCargadas = MutableLiveData<Boolean>()
 
     fun onCreate() {
+        /*
+         * Recupera todos los reportes de la BBDD
+         */
         db.collection("reportes").get().addOnSuccessListener {
             val reportesRaw= it.documents
             reportesRaw.forEach {
@@ -44,6 +47,9 @@ class InformacionViewModel @Inject constructor() : ViewModel() {
             setCapacidadMedia()
         }
 
+        /*
+         * Recupera todas las incidencias de la BBDD ordenadas por fecha
+         */
         db.collection("incidencias").orderBy("fecha", Query.Direction.DESCENDING).get().addOnSuccessListener {
             val incidenciasRaw= it.documents
             incidenciasCargadas.postValue(false)
@@ -60,12 +66,18 @@ class InformacionViewModel @Inject constructor() : ViewModel() {
 
     }
 
+    /*
+     * Establece la capacidadUltimoReporte y su fecha
+     */
     private fun setInformacion() {
         reporte = reportes.find { it.idParking == parking?.id }
         capacidadUltimoReporte.postValue(reporte?.capacidad)
         fechaUltimoReporte.postValue(reporte?.fechaReporte)
     }
 
+    /*
+     * Calcula la capacidad media según los reportes y el aparcamiento
+     */
     private fun setCapacidadMedia() {
         val reportesFiltrados: ArrayList<Reporte> = arrayListOf()
         var capacidadMediaReporte = 0.0

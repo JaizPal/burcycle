@@ -51,9 +51,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val window = this.window
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         getWindow().statusBarColor = ContextCompat.getColor(this, R.color.verdeClaro)
-        supportActionBar?.setDisplayShowTitleEnabled(false);
+        supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
+    /*
+     * Guarda en SharedPreferences la información del email y foto
+     * recibidos por parámetros
+     */
     private fun guardarDatosUsuario(email: String, photoURI: String) {
         val prefs = getSharedPreferences("inicioSesion", Context.MODE_PRIVATE).edit()
         prefs.putString("email", email)
@@ -61,6 +65,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         prefs.apply()
     }
 
+    /*
+     * Establece en el header del navView la imagen del usuario.
+     */
     private fun setAvatarCorreo(photoURI: String?, email: String?) {
         val header = binding.navView.getHeaderView(0)
         val imagen = header.findViewById<ImageView>(R.id.imagenUsuario)
@@ -74,6 +81,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
+    /*
+     * Elimina los datos guardados en SharedPreferences y navega a la ventana Login
+     */
     private fun cerrarSesion(): Boolean {
         val prefs = this.getSharedPreferences("inicioSesion", Context.MODE_PRIVATE)!!.edit()
         prefs.clear()
@@ -84,6 +94,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+    /*
+     * Navega a la ventana de incidencia
+     */
     private fun irIncidencia(): Boolean {
         binding.drawerLayout.closeDrawers()
         val intent = Intent(this, IncidenciaActivity::class.java).apply { }
@@ -97,6 +110,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return NavigationUI.navigateUp(navController, binding.drawerLayout)
     }
 
+    /*
+     * Navega a la ventana del login
+     */
     private fun navegarLogin() {
         val intent = Intent(this, LoginActivity::class.java).apply { }
         AuthUI.getInstance().signOut(this)
@@ -104,6 +120,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         finish()
     }
 
+    /*
+     * Controla que botón del menú se ha pulsado.
+     */
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         Log.i("Algo", item.itemId.toString() + " Jaime")
         when (item.itemId) {

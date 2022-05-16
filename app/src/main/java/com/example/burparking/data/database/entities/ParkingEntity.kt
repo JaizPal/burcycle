@@ -5,6 +5,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.burparking.domain.model.Parking
 
+/*
+ * Definición de la tabla parking
+ */
 @Entity(tableName = "parking_table")
 data class ParkingEntity (
     @PrimaryKey(autoGenerate = false)

@@ -28,11 +28,6 @@ class ReporteFragment : Fragment() {
     private lateinit var parking: Parking
     private val db = FirebaseFirestore.getInstance()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,6 +45,9 @@ class ReporteFragment : Fragment() {
         return binding.root
     }
 
+    /*
+     * Navega a la ventana incidencia con el argumento del aparcamiento seleccinado
+     */
     private fun irIncidencia() {
         val intent = Intent(activity, IncidenciaActivity::class.java).apply {
             putExtra("parking", parking)
@@ -58,6 +56,10 @@ class ReporteFragment : Fragment() {
         requireActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
 
+    /*
+     * Si el campo de la capacidad está completado añade el reporte a la BBDD
+     * y navega a la pantalla principal.
+     */
     private fun addReporte() {
         if(binding.capacidad.text.isNullOrEmpty()) {
             binding.incidenciaTextField.error = "Campo obligatorio"

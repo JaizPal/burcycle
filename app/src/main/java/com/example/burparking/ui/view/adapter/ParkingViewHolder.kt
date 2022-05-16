@@ -17,6 +17,10 @@ class ParkingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     private val binding = ItemParkingBinding.bind(view)
 
+    /*
+     * Se encarga de pintar y definir el funcionamiento de cada item del
+     * recyclerView
+     */
     fun render(parking: Parking, direccionActual: Direccion) {
         binding.tvCapacidadParking.text = "Capacidad: " + parking.capacidad.toString()
         binding.tvDistancia.text = "Distancia: " + parking.distancia?.toInt().toString() + " metros"
@@ -51,6 +55,9 @@ class ParkingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     }
 
+    /*
+     * Encargado de desplegar o contraer el item mediante una animación
+     */
     private fun cardOnClick() {
         val cardParking = binding.cardParking
         val cardArrow = binding.cardArrow

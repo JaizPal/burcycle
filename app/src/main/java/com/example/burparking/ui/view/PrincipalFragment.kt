@@ -21,10 +21,6 @@ class PrincipalFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val principalViewModel: PrincipalViewModel by viewModels()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,8 +28,14 @@ class PrincipalFragment : Fragment() {
     ): View? {
         _binding = FragmentPrincipalBinding.inflate(inflater, container, false)
 
+        /*
+         * Llama al método del viewModel que descarga las frases de la BBDD
+         */
         principalViewModel.onCreate()
 
+        /*
+         * Cuando el valor cambia, lo establece en la vista
+         */
         principalViewModel.parte1.observe(requireActivity()) {
             binding.parte1.text = it
         }
@@ -50,11 +52,17 @@ class PrincipalFragment : Fragment() {
         return binding.root
     }
 
+    /*
+     * Navega a la ventana de buscar dirección
+     */
     private fun navegarBuscarDireccion() {
         aplicarAnimaciones()
         findNavController().navigate(R.id.action_principalFragment_to_buscarDireccionFragment)
     }
 
+    /*
+     * Define las animaciones que se ejecutarán cuando se llame al método
+     */
     private fun aplicarAnimaciones() {
         binding.parte1.animate()
             .alpha(0f)

@@ -29,27 +29,40 @@ class BuscarDireccionViewModel @Inject constructor(
     var reverseDireccion = MutableLiveData<ReverseDireccionModel>()
     var nParking = MutableLiveData<Int>()
 
+    /*
+     * Recupera todas las direcciones y aparcamientos
+     */
     fun onCreate() {
         viewModelScope.launch {
             isLoading.value = true
-            direcciones.value = getDireccionesUserCase()!!
+            direcciones.value = getDireccionesUserCase()
             isLoading.value = false
         }
         viewModelScope.launch {
             isLoading.value = true
-            parkings.value = getAllParkingsUseCase()!!
+            parkings.value = getAllParkingsUseCase()
             isLoading.value = false
         }
 
     }
 
+    /*
+     * Según la dirección mandada por parámetros establece
+     * los 10 aparcamientos más cercanos.
+     */
     fun parkingCercanos(direccion: Direccion) {
         nParking.value = 0
         viewModelScope.launch {
             var cacheParkingsCercanos: List<Parking>? = null
+            /*
+             * Se establece la distancia de cada aparcamiento
+             */
             parkings.value?.forEach { p -> establecerDistancia(direccion, p) }
             parkings.value = parkings.value?.sortedBy { it.distancia }
             if (parkings.value?.size!! >= 10) {
+                /*
+                 * Se cogen los primeros 10 aparcamientos
+                 */
                 cacheParkingsCercanos = parkings.value?.take(10)
             }
             cacheParkingsCercanos?.forEach { p -> establecerDireccion(p) }
@@ -57,12 +70,20 @@ class BuscarDireccionViewModel @Inject constructor(
         }
     }
 
+    /*
+     * Se establece la distancia en el aparcamiento que hay entre él y la dirección
+     * mandada por parámetros
+     */
     fun establecerDistancia(direccion: Direccion, parking: Parking) {
         val distancia: FloatArray = floatArrayOf(0f)
         Location.distanceBetween(direccion.lat, direccion.lon, parking.lat, parking.lon, distancia)
         parking.distancia = distancia[0]
     }
 
+    /*
+     * Si el aparcamiento mandado por parámetros no tiene establecida
+     * una dirección o un número se hace uso de la dirección inversa
+     */
     fun establecerDireccion(parking: Parking) {
         parkingCargados.postValue(false)
         viewModelScope.launch {
@@ -86,7 +107,7 @@ class BuscarDireccionViewModel @Inject constructor(
 
     fun getReverseDireccion(parking: Parking) {
         viewModelScope.launch {
-           reverseDireccion.value  = getReverseDireccionUseCase(parking.lon, parking.lat)!!
+           reverseDireccion.value  = getReverseDireccionUseCase(parking.lon, parking.lat)
         }
     }
 }

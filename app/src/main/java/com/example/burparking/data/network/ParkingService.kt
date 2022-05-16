@@ -5,6 +5,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+/*
+ * Devuelve un servicio de la API de parking
+ */
 class ParkingService @Inject constructor(private val api: ParkingApiClient) {
 
     suspend fun getparkings(): ParkingElementModel {

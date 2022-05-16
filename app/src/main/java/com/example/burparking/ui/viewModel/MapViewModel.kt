@@ -27,14 +27,21 @@ class MapViewModel @Inject constructor(
     var parkingCargados = MutableLiveData<Boolean>()
     var parkingPulsado = MutableLiveData<Parking>()
 
+    /*
+     * Recupera todos los aparcamientos
+     */
     fun onCreate() {
         viewModelScope.launch {
             parkingCargados.value = false
-            parkings.value = getAllParkingsUseCase()!!
+            parkings.value = getAllParkingsUseCase()
             parkingCargados.value = true
         }
     }
 
+    /*
+     * Si el aparcamiento mandado por parámetros no tiene establecida
+     * una dirección o un número se hace uso de la dirección inversa
+     */
     fun establecerDireccion(parking: Parking) {
         parkingCargados.postValue(false)
         viewModelScope.launch {
@@ -59,6 +66,9 @@ class MapViewModel @Inject constructor(
         establecerDireccion(parkings.value?.find { it.id == id }!!)
     }
 
+    /*
+     * Dibuja la ruta desde la dirección hasta el aparcamiento.
+     */
     fun setRoad(geoPoints: ArrayList<GeoPoint>, map: MapView, context: Context) {
         viewModelScope.launch {
             val roadManager: RoadManager =

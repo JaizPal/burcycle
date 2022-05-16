@@ -9,6 +9,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
+/*
+ * Modelo de Parking usado en la app
+ * Extiende de Parceable para poder mandar una instancia
+ * como parámetro de un Fragment
+ */
 data class Parking(
     val id: Long,
     val lat: Double,

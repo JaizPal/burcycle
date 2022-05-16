@@ -26,10 +26,6 @@ class InformacionFragment : Fragment() {
     private lateinit var parking: Parking
 
     private val informacionViewModel: InformacionViewModel by viewModels()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +39,9 @@ class InformacionFragment : Fragment() {
         binding.tvCapacidad.text = parking.capacidad.toString()
         informacionViewModel.onCreate()
 
+        /*
+         * Modifica el campo de la fecha del último reporte según la respuesta de la BBDD
+         */
         informacionViewModel.fechaUltimoReporte.observe(requireActivity()) {
             binding.tvFechaReporte.text = (if (it != null) {
                 SimpleDateFormat(
@@ -54,14 +53,24 @@ class InformacionFragment : Fragment() {
             }).toString()
         }
 
+        /*
+         * Modifica el campo de la capacidad del último reporte según la respuesta de la BBDD
+         */
         informacionViewModel.capacidadUltimoReporte.observe(requireActivity()) {
             binding.tvUltimaCapacidad.text = (it ?: "").toString()
         }
 
+        /*
+         * Modifica el campo de la capacidad media según la respuesta de la BBDD
+         */
         informacionViewModel.capacidadMedia.observe(requireActivity()) {
             binding.tvCapacidadMedia.text = it.toString()
         }
 
+        /*
+         * Cuando las incidencias han sido cargadas las importa en el
+         * recyclerView
+         */
         informacionViewModel.incidenciasCargadas.observe(requireActivity()) {
             if (it == true) {
                 val recyclerView = binding.reciclerViewIncidencias
@@ -71,6 +80,9 @@ class InformacionFragment : Fragment() {
             }
         }
 
+        /*
+         * Navega a la ventana de información pasando por parámetros el aparcamiento seleccionado
+         */
         binding.buttonIr.setOnClickListener {
             findNavController().navigate(
                 InformacionFragmentDirections.actionInformacionFragmentToReporteFragment(
@@ -82,6 +94,10 @@ class InformacionFragment : Fragment() {
         return binding.root
     }
 
+    /*
+     * Controla las opciones del menú que se pulsan,
+     * en este caso, solo el botón de comprtir
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.shareButton) {
             compartirAparcamiento()
@@ -89,12 +105,19 @@ class InformacionFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
+    /*
+     * Inicia la aplicación de GoogleMaps con el parámetro de la URI
+     * para que el mapa se centre y seleccione el punto del aparcamiento
+     */
     private fun compartirAparcamiento() {
         val uri = "http://maps.google.com/maps?q=loc:" + parking.lat + "," + parking.lon + " (" + "Aparcamiento bicicletas - Capacidad: ${parking.capacidad}" + ")"
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
         startActivity(Intent.createChooser(intent, null))
     }
 
+    /*
+     * Define el el menú (botón de compartir)
+     */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_main, menu)

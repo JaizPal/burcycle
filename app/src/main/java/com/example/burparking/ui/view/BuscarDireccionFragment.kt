@@ -69,6 +69,9 @@ class BuscarDireccionFragment : Fragment() {
             CancellationTokenSource().token
         )
         val autoCompletado = binding.autoCompleteDirecciones
+        /*
+         * Muestra el progessBar dependiendo del valor de isLoading del ViewModel
+         */
         buscarDireccionViewModel.isLoading.observe(requireActivity()) {
             if(it) {
                 binding.progressBar.visibility = View.VISIBLE
@@ -78,6 +81,10 @@ class BuscarDireccionFragment : Fragment() {
             binding.progressBar.isVisible = it
         }
 
+        /*
+         * Cuando cambia el valor de direcciones del ViewModel, si es distinto
+         * de null, crea el adapter para el autocompletado
+         */
         buscarDireccionViewModel.direcciones.observe(requireActivity()) {
             if (it != null) {
                 adapterDirecciones = ArrayAdapter<Direccion>(
@@ -89,12 +96,20 @@ class BuscarDireccionFragment : Fragment() {
             }
         }
 
+        /*
+         * Cuando se pulsa sobre alguna de las direcciones se ejecuta
+         * el proceso de búsqueda de los aparcamientos más cercanos
+         */
         autoCompletado.setOnItemClickListener { parent, view, position, id ->
             buscarDireccionViewModel.parkingCercanos(adapterDirecciones.getItem(position)!!)
             direccionActual = adapterDirecciones.getItem(position)
             bajarTeclado()
         }
 
+        /*
+         * Controla el efecto Shimmer dependiendo de si la variable
+         * nParking del ViewModel vale 10 o no.
+         */
         buscarDireccionViewModel.nParking.observe(requireActivity()) {
             if(it == 10) {
                 binding.shimmer.visibility = View.GONE
@@ -108,6 +123,9 @@ class BuscarDireccionFragment : Fragment() {
             }
         }
 
+        /*
+         * Navega a la ventana del mapa
+         */
         binding.tvVerMapa.setOnClickListener {
             aplicarAnimaciones()
             findNavController().navigate(
@@ -116,10 +134,12 @@ class BuscarDireccionFragment : Fragment() {
                     arrayOf()
                 )
             )
-            Log.i("Número de Aparcamientos: ", buscarDireccionViewModel.parkings.value?.count().toString())
-            Log.i("Número de Direcciones: ", buscarDireccionViewModel.direcciones.value?.count().toString())
         }
 
+        /*
+         * Se realiza la búsqueda de aparcamientos cercanos según la ubicación del usuario.
+         * Se comprueba que se han concedido los permisos y que tiene la ubicación activada.
+         */
         binding.tvUbicacionActual.setOnClickListener {
             bajarTeclado()
             buscarDireccionViewModel.nParking.postValue(0)
@@ -157,21 +177,23 @@ class BuscarDireccionFragment : Fragment() {
                         )
                     }
                 } else {
-                    Snackbar.make(
-                        requireActivity().findViewById(android.R.id.content),
-                        "Localización desactivada",
-                        Snackbar.LENGTH_LONG
-                    ).show()
+                    /*
+                     * Muestra un SnackBar si la localización está desactivada
+                     */
+                    showSnackBar("Localización desactivada")
                 }
             } else {
-                Snackbar.make(
-                    requireActivity().findViewById(android.R.id.content),
-                    "Permisos no concedidos",
-                    Snackbar.LENGTH_LONG
-                ).show()
+                /*
+                 * Muestra un SnackBar si no se han concedido los permisos
+                 */
+                showSnackBar("Permisos no concedidos")
             }
         }
 
+        /*
+         * Modifica el input si el usuario ha pulsado sobre la ubicación actual
+         * y la variable ha cambiado
+         */
         buscarDireccionViewModel.reverseDireccion.observe(requireActivity()) {
             if (it != null) {
                 autoCompletado.setText(it.toString())
@@ -181,6 +203,20 @@ class BuscarDireccionFragment : Fragment() {
         return binding.root
     }
 
+    /*
+     * Muestra un SnackBar según el mensaje enviado
+     */
+    private fun showSnackBar(message: String) {
+        Snackbar.make(
+            requireActivity().findViewById(android.R.id.content),
+            message,
+            Snackbar.LENGTH_LONG
+        ).show()
+    }
+
+    /*
+     * Carga en el recyclerView los aparcamientos más cercanos
+     */
     private fun cargarCardsParkings() {
         val recyclerView = binding.recyclerViewParking
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -188,6 +224,10 @@ class BuscarDireccionFragment : Fragment() {
             ParkingAdapter(buscarDireccionViewModel.closestParkings.value!!, direccionActual!!)
     }
 
+    /*
+     * Comprueba que se han dado todos los permisos
+     * @return Boolean: todos los permisos han sido otorgados
+     */
     private fun checkPermisos(permisos: Array<String>): Boolean {
         return permisos.all {
             return ContextCompat.checkSelfPermission(
@@ -197,6 +237,9 @@ class BuscarDireccionFragment : Fragment() {
         }
     }
 
+    /*
+     * Solicita al usuario los permisos mandados por parámetros
+     */
     private fun solicitarPermisos(permisos: Array<String>) {
         ActivityCompat.requestPermissions(
             requireActivity(),
@@ -205,6 +248,10 @@ class BuscarDireccionFragment : Fragment() {
         )
     }
 
+    /*
+     * Establece los permisos necesarios según la versión de Android
+     * y los checkea, si no están concedidos los solicita.
+     */
     private fun verificarPermisos() {
         val permisos =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -237,6 +284,10 @@ class BuscarDireccionFragment : Fragment() {
         }
     }
 
+    /*
+     * Comprueba si la localización está activada
+     * @return Boolean: la localización está activada
+     */
     private fun localizacionActivada(): Boolean {
         val locationManager: LocationManager =
             requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -244,6 +295,9 @@ class BuscarDireccionFragment : Fragment() {
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 
+    /*
+     * Baja el teclado del teléfono
+     */
     private fun bajarTeclado() {
         val imm = activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         var view = activity?.currentFocus
@@ -261,6 +315,9 @@ class BuscarDireccionFragment : Fragment() {
         binding.autoCompleteDirecciones.setText("")
     }
 
+    /*
+     * Define las animaciones que se ejecutan cuando el método es llamado
+     */
     private fun aplicarAnimaciones() {
         binding.tvVerMapa.animate()
             .alpha(0f)

@@ -5,6 +5,11 @@ import android.os.Parcelable
 import com.example.burparking.data.database.entities.DireccionEntity
 import com.example.burparking.data.model.direccion.DireccionModel
 
+/*
+ * Modelo de Direccion usado en la app
+ * Extiende de Parceable para poder mandar una instancia
+ * como parámetro de un Fragment
+ */
 data class Direccion(
     val id: Long,
     val lat: Double,
@@ -20,8 +25,7 @@ data class Direccion(
         parcel.readString(),
         parcel.readString(),
         parcel.readString()
-    ) {
-    }
+    )
 
     override fun toString(): String {
         return if (!calle.isNullOrEmpty()) {

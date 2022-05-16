@@ -11,6 +11,10 @@ class IncidenciaViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     private val binding = ItemIncidenciaBinding.bind(view)
 
+    /*
+     * Se encarga de pintar y definir el funcionamiento de cada item del
+     * recyclerView
+     */
     fun render(incidencia: Incidencia) {
         binding.tvFechaIncidencia.text = incidencia.fecha
         binding.tipoIncidencia.text = incidencia.tipo

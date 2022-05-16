@@ -2,6 +2,9 @@ package com.example.burparking.data.model.direccion
 
 import com.google.gson.annotations.SerializedName
 
+/*
+ * Modelo de los tags de la dirección
+ */
 data class DireccionTagsModel(
     @SerializedName("addr:housenumber")
     val numero: String,

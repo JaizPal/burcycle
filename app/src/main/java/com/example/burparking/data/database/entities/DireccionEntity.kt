@@ -5,6 +5,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.burparking.domain.model.Direccion
 
+    /*
+     * Definición de la tabla direccion
+     */
     @Entity(tableName = "direccion_table")
     data class DireccionEntity(
         @PrimaryKey(autoGenerate = false)

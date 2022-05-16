@@ -6,6 +6,9 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+/*
+ * Interface que recupera la información de las reverseDirecciones
+ */
 interface ReverseDireccionApiClient {
     @GET("reverse")
     suspend fun getReverseDireccion(

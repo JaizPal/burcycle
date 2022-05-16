@@ -14,10 +14,17 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
 
+/*
+ * Módulo para proveer instancias Singleton de las diferentes
+ * llamadas a las APIs
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+    /*
+     * Definición del cliente
+     */
     private var client = OkHttpClient.Builder()
         .connectTimeout(1, TimeUnit.MINUTES)
         .readTimeout(1, TimeUnit.MINUTES)

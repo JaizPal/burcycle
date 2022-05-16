@@ -186,7 +186,8 @@
                 android:src="@drawable/ic_close_outline"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="#000000" />
+                app:tint="#000000"
+                android:contentDescription="TODO" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

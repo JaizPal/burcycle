@@ -15,7 +15,6 @@ import com.example.burparking.databinding.ActivityLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,6 +41,10 @@ class LoginActivity : AppCompatActivity() {
         setup()
     }
 
+    /*
+     * Comprueba si hay un usuario guardado en SharedPreferences.
+     * Si existe navega a la ventana principal.
+     */
     private fun session() {
         val prefs = getSharedPreferences("inicioSesion", Context.MODE_PRIVATE)
         val email = prefs?.getString("email", null)
@@ -54,6 +57,13 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /*
+     * Establece los listener de los botones:
+     *  - registrar
+     *  - acceder
+     *  - google
+     *  - recuperar contraseña
+     */
     private fun setup() {
 
         binding.registrarButton.setOnClickListener {
@@ -64,13 +74,20 @@ class LoginActivity : AppCompatActivity() {
                     .createUserWithEmailAndPassword(
                         email,
                         password
+                        /*
+                         * Si el registro es satisfactorio se le envía un email de confirmación
+                         */
                     ).addOnCompleteListener {
                         if (it.isSuccessful) {
                             FirebaseAuth.getInstance().currentUser?.sendEmailVerification()
-                            mostrarSnackBar("Se ha enviado un email de confirmación a su correo")
+                            showAlert("Se ha enviado un email de confirmación a su correo", "Alerta")
                         }
+                        /*
+                         * Si se produce un error en el registro se le muestra una alerta con
+                         * el mensaje del error.
+                         */
                     }.addOnFailureListener {
-                        showAlert((it.message.toString()))
+                        showAlert((it.message.toString()), "Error")
                     }
             }
         }
@@ -83,6 +100,11 @@ class LoginActivity : AppCompatActivity() {
                     .signInWithEmailAndPassword(
                         email,
                         password
+                        /*
+                         * Si el sigIn es satisfactorio se comprueba que el correo
+                         * está verificado. Si no lo está se le muestra una alerta,
+                         * sino se navega a la ventana principal.
+                         */
                     ).addOnCompleteListener {
                         if (it.isSuccessful) {
                             email = it.result.user?.email ?: ""
@@ -92,14 +114,22 @@ class LoginActivity : AppCompatActivity() {
                                     navegarPrincipal(email, photoURI.toString(), 300L)
                                 }
                             } else {
-                                showAlert("Confirme la verificación del correo electrónico")
+                                showAlert("Confirme la verificación del correo electrónico", "Error")
                             }
                         }
+                        /*
+                         * Si se produce un error en el registro se le muestra una alerta con
+                         * el mensaje del error.
+                         */
                     }.addOnFailureListener {
-                        showAlert(it.message.toString())
+                        showAlert(it.message.toString(), "Error")
                     }
             }
         }
+
+        /*
+         * Se hace el inicio de sesión mostrando el intent específico de Google
+         */
         binding.googleButton.setOnClickListener {
             val googleConf = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -109,19 +139,17 @@ class LoginActivity : AppCompatActivity() {
             startActivityForResult(googleClient.signInIntent, GOOGLE_SIG_IN)
         }
 
+        /*
+         * Se navega a la ventana de recuperación de contraseña
+         */
         binding.tvRecuperar.setOnClickListener {
             navegarRecuperarPassword()
         }
     }
 
-    private fun mostrarSnackBar(mensaje: String) {
-        Snackbar.make(
-            this.findViewById(android.R.id.content),
-            mensaje,
-            Snackbar.LENGTH_LONG
-        ).show()
-    }
-
+    /*
+     * Intent que muestra las selección de cuentas de Google
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == GOOGLE_SIG_IN) {
@@ -140,15 +168,26 @@ class LoginActivity : AppCompatActivity() {
                                 }
                             }
                         }.addOnFailureListener {
-                            showAlert(it.message.toString())
+                            showAlert(it.message.toString(), "Error")
                         }
                 }
             } catch (e: ApiException) {
-                showAlert(e.message.toString())
+                showAlert(e.message.toString(), "Error")
             }
         }
     }
 
+    /*
+ * Comprueba que los campos del email y la contraseña
+ * siguen un formato correcto:
+ *  - email: bien formado.
+ *  - contraseña: mínimo 5 caracteres
+ *
+ * Si están mal formados realizarán cambios en la ui
+ * para mostrar los errores.
+ *
+ * @return: Boolean: ambos campos son correctos.
+ */
     private fun comprobarCampos(): Boolean {
         var emailCompletado = false
         var passwordCompletado = false
@@ -177,6 +216,9 @@ class LoginActivity : AppCompatActivity() {
         return emailCompletado && passwordCompletado
     }
 
+    /*
+     * Navega a la ventana principal haciendo uso de animaciones.
+     */
     private suspend fun navegarPrincipal(email: String, photoURI: String, delay: Long) {
         aplicarAnimaciones()
         delay(delay)
@@ -189,13 +231,19 @@ class LoginActivity : AppCompatActivity() {
         finish()
     }
 
+    /*
+     * Navega a la ventana de recuperar contraseña.
+     */
     private fun navegarRecuperarPassword() {
         val intent = Intent(this, RecuperarPasswordActivity::class.java)
         startActivity(intent)
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
 
-    private fun showAlert(mensaje: String) {
+    /*
+     * Muestar un diálogo de alerta según el mensaje que reciba.
+     */
+    private fun showAlert(mensaje: String, titulo: String) {
         Log.i("Fail", mensaje)
         val mensajeError = when (mensaje) {
             "The password is invalid or the user does not have a password." -> "La contraseña es inválida o el usuario no tiene contraseña"
@@ -208,13 +256,16 @@ class LoginActivity : AppCompatActivity() {
             }
         }
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Error")
+        builder.setTitle(titulo)
         builder.setMessage(mensajeError)
         builder.setPositiveButton("Aceptar", null)
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
 
+    /*
+     * Define las animaciones que se ejecutan cuando el método es llamado
+     */
     private fun aplicarAnimaciones() {
         binding.emailLayout.animate()
             .alpha(0f)

@@ -18,6 +18,9 @@ class IncidenciaViewModel @Inject constructor(): ViewModel() {
     private val db = FirebaseFirestore.getInstance()
     val succes = MutableLiveData<Int>()
 
+    /*
+     * Recupera los tipos de incidencias de la BBDD
+     */
     fun onCreate() {
         succes.value = 2
         db.collection("tipoIncidencias").document("tipoIncidencias").get().addOnSuccessListener {
@@ -25,6 +28,9 @@ class IncidenciaViewModel @Inject constructor(): ViewModel() {
         }
     }
 
+    /*
+     * Añade a la base de datos una incidencia según los datos recibidos por parámetros
+     */
     fun addIncidencia(descripcion: String, tipo: String, parking: Parking?) {
         db.collection("incidencias").document(SimpleDateFormat(
             "dd-MM-yyyy HH:mm:ss",
