@@ -1,8 +1,6 @@
 package com.example.burparking.ui.view
 
 import android.os.Bundle
-import android.transition.Fade
-import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

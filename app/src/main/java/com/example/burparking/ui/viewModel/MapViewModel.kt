@@ -33,7 +33,7 @@ class MapViewModel @Inject constructor(
     fun onCreate() {
         viewModelScope.launch {
             parkingCargados.value = false
-            parkings.value = getAllParkingsUseCase()
+            parkings.value = getAllParkingsUseCase()!!
             parkingCargados.value = true
         }
     }

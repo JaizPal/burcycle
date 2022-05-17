@@ -42,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:fontFamily="@font/be_vietnam_light"
-                    android:text="Incidencia"
+                    android:text="@string/incidencia"
                     android:textAlignment="center"
                     android:textColor="@color/texto"
                     android:textSize="20sp"
@@ -62,7 +62,7 @@
                 android:layout_marginTop="25dp"
                 android:layout_marginEnd="25dp"
                 android:background="#FFFFFF"
-                android:hint="Tipo de incidencia"
+                android:hint="@string/tipo_de_incidencia"
                 android:textColorHint="@color/texto"
                 app:boxStrokeColor="@color/texto"
                 app:hintTextColor="@color/texto">
@@ -72,7 +72,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:inputType="none" />
+                    android:inputType="none"
+                    tools:ignore="TextContrastCheck" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -95,8 +96,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#FFFFFF"
-                    android:hint="Descripción"
-                    android:singleLine="false" />
+                    android:hint="@string/descripci_n"
+                    android:singleLine="false"
+                    tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
@@ -110,13 +112,14 @@
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="20dp"
+        android:fontFamily="@font/be_vietnam_light"
         android:gravity="center"
-        android:text="Enviar"
+        android:text="@string/enviar"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="@id/incidenciaLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:fontFamily="@font/be_vietnam_light"/>
+        tools:ignore="TextContrastCheck" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

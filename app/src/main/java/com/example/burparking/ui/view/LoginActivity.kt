@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
@@ -80,7 +79,10 @@ class LoginActivity : AppCompatActivity() {
                     ).addOnCompleteListener {
                         if (it.isSuccessful) {
                             FirebaseAuth.getInstance().currentUser?.sendEmailVerification()
-                            showAlert("Se ha enviado un email de confirmación a su correo", "Alerta")
+                            showAlert(
+                                "Se ha enviado un email de confirmación a su correo",
+                                "Alerta"
+                            )
                         }
                         /*
                          * Si se produce un error en el registro se le muestra una alerta con
@@ -114,7 +116,10 @@ class LoginActivity : AppCompatActivity() {
                                     navegarPrincipal(email, photoURI.toString(), 300L)
                                 }
                             } else {
-                                showAlert("Confirme la verificación del correo electrónico", "Error")
+                                showAlert(
+                                    "Confirme la verificación del correo electrónico",
+                                    "Error"
+                                )
                             }
                         }
                         /*
@@ -244,7 +249,6 @@ class LoginActivity : AppCompatActivity() {
      * Muestar un diálogo de alerta según el mensaje que reciba.
      */
     private fun showAlert(mensaje: String, titulo: String) {
-        Log.i("Fail", mensaje)
         val mensajeError = when (mensaje) {
             "The password is invalid or the user does not have a password." -> "La contraseña es inválida o el usuario no tiene contraseña"
             "A network error (such as timeout, interrupted connection or unreachable host) has occurred." -> "Error de conexión"

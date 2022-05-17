@@ -1,6 +1,5 @@
 package com.example.burparking.ui.viewModel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.burparking.domain.model.Frase
@@ -48,5 +47,4 @@ class PrincipalViewModel @Inject constructor(): ViewModel() {
         parte2.value = fraseAleatoria.parte2
         autor.value = fraseAleatoria.autor
     }
-
 }

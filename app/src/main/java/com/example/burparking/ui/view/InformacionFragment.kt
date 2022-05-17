@@ -110,7 +110,8 @@ class InformacionFragment : Fragment() {
      * para que el mapa se centre y seleccione el punto del aparcamiento
      */
     private fun compartirAparcamiento() {
-        val uri = "http://maps.google.com/maps?q=loc:" + parking.lat + "," + parking.lon + " (" + "Aparcamiento bicicletas - Capacidad: ${parking.capacidad}" + ")"
+        val uri =
+            "http://maps.google.com/maps?q=loc:" + parking.lat + "," + parking.lon + " (" + "Aparcamiento bicicletas - Capacidad: ${parking.capacidad}" + ")"
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
         startActivity(Intent.createChooser(intent, null))
     }

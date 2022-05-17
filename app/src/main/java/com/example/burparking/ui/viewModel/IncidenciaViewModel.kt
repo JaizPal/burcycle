@@ -12,7 +12,7 @@ import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class IncidenciaViewModel @Inject constructor(): ViewModel() {
+class IncidenciaViewModel @Inject constructor() : ViewModel() {
 
     val tiposIncidencias = MutableLiveData<List<String>>()
     private val db = FirebaseFirestore.getInstance()
@@ -32,23 +32,24 @@ class IncidenciaViewModel @Inject constructor(): ViewModel() {
      * Añade a la base de datos una incidencia según los datos recibidos por parámetros
      */
     fun addIncidencia(descripcion: String, tipo: String, parking: Parking?) {
-        db.collection("incidencias").document(SimpleDateFormat(
-            "dd-MM-yyyy HH:mm:ss",
-            Locale.getDefault()
-        ).format(Date())
-        ).set(hashMapOf(
-            "descripcion" to descripcion,
-            "tipo" to tipo,
-            "usuario" to FirebaseAuth.getInstance().currentUser?.email,
-            "idParking" to parking?.id,
-            "fecha" to Timestamp(Date())
-        )).addOnSuccessListener {
+        db.collection("incidencias").document(
+            SimpleDateFormat(
+                "dd-MM-yyyy HH:mm:ss",
+                Locale.getDefault()
+            ).format(Date())
+        ).set(
+            hashMapOf(
+                "descripcion" to descripcion,
+                "tipo" to tipo,
+                "usuario" to FirebaseAuth.getInstance().currentUser?.email,
+                "idParking" to parking?.id,
+                "fecha" to Timestamp(Date())
+            )
+        ).addOnSuccessListener {
             succes.value = 0
         }.addOnCanceledListener {
             succes.value = -1
             succes.value = 2
         }
-
     }
-
 }

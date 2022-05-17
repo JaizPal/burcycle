@@ -1,10 +1,6 @@
 package com.example.burparking.ui.view
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -12,15 +8,10 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.navigation.findNavController
-import androidx.navigation.ui.NavigationUI
 import com.example.burparking.R
 import com.example.burparking.databinding.ActivityIncidenciaBinding
 import com.example.burparking.domain.model.Parking
 import com.example.burparking.ui.viewModel.IncidenciaViewModel
-import com.firebase.ui.auth.AuthUI
-import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,7 +21,6 @@ class IncidenciaActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityIncidenciaBinding
     private val db = FirebaseFirestore.getInstance()
-    private lateinit var adapterTiposIncidencias: ArrayAdapter<String>
     private var parking: Parking? = null
 
     private val incidenciaViewModel: IncidenciaViewModel by viewModels()

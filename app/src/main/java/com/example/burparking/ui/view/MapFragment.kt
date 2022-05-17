@@ -2,9 +2,6 @@ package com.example.burparking.ui.view
 
 import android.annotation.SuppressLint
 import android.content.Context.LOCATION_SERVICE
-import android.graphics.Color
-import android.graphics.ColorMatrix
-import android.graphics.ColorMatrixColorFilter
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -68,20 +65,6 @@ class MapFragment : Fragment() {
         setupOsmdroid()
         mapViewModel.onCreate()
         map = binding.map
-//        mapColorConfigure()
-//        val provider: Array<String> =
-//            arrayOf("https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=c8fa4a1f921d4384b4e755f57c8e668d")
-//        val tileSource = XYTileSource(
-//            "cycle",
-//            0,
-//            18,
-//            256,
-//            ".png",
-//            provider,
-//            "© Colaboradores de OpenStreetMap",
-//            TileSourcePolicy(2, TileSourcePolicy.FLAG_USER_AGENT_MEANINGFUL)
-//        )
-//        val aceeptUserAgent = TileSourcePolicy(2, TileSourcePolicy.FLAG_NO_PREVENTIVE)
 
         val thunderforestTileSource =
             ThunderforestTileSource(requireContext(), ThunderforestTileSource.CYCLE)
@@ -121,7 +104,7 @@ class MapFragment : Fragment() {
                         items.add(overlayItem)
 
                     }
-                    var overlay = ItemizedOverlayWithFocus<OverlayItem>(
+                    var overlay = ItemizedOverlayWithFocus(
                         items,
                         object : ItemizedIconOverlay.OnItemGestureListener<OverlayItem> {
                             override fun onItemSingleTapUp(
@@ -283,16 +266,6 @@ class MapFragment : Fragment() {
      */
     private fun configureMap() {
         setZoomMap()
-//        val tileSource = XYTileSource(
-//            "cycle", 0, 20, 256, ".png", arrayOf(
-//                "https://a.tile-cyclosm.openstreetmap.fr/[cyclosm|cyclosm-lite]/0,0,0.png"
-//            )
-//        )
-//        Log.i("Pro", (map.tileProvider.tileSource.toString() + map.tileProvider.tileCache.size))
-//        mapColorConfigure2()
-//        map.setTileSource(tileSource)
-//        Log.i("Pro", (map.tileProvider.tileSource.toString() + map.tileProvider.tileCache.size))
-
         map.isTilesScaledToDpi = true
         map.zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
         map.setMultiTouchControls(true)
@@ -321,69 +294,6 @@ class MapFragment : Fragment() {
             val startPoint = GeoPoint(parkings[0].lat, parkings[0].lon)
             mapController.setCenter(startPoint)
         }
-    }
-
-    private fun mapColorConfigure2() {
-        val matrixA = ColorMatrix()
-        matrixA.setSaturation(0.3f)
-        val matrixB = ColorMatrix()
-        matrixB.setScale(1.12f, 1.13f, 1.13f, 1.0f)
-        matrixA.setConcat(matrixB, matrixA)
-        val filter = ColorMatrixColorFilter(matrixA)
-        map.overlayManager.tilesOverlay.setColorFilter(filter)
-    }
-
-    private fun mapColorConfigure() {
-        val inverseMatrix = ColorMatrix(
-            floatArrayOf(
-                -1.0f, 0.0f, 0.0f, 0.0f, 255f,
-                0.0f, -1.0f, 0.0f, 0.0f, 255f,
-                0.0f, 0.0f, -1.0f, 0.0f, 255f,
-                0.0f, 0.0f, 0.0f, 1.0f, 0.0f
-            )
-        )
-        val destinationColor = Color.parseColor("#FF2A2A2A")
-        val lr = (255.0f - Color.red(destinationColor)) / 255.0f
-        val lg = (255.0f - Color.green(destinationColor)) / 255.0f
-        val lb = (255.0f - Color.blue(destinationColor)) / 255.0f
-        val grayscaleMatrix = ColorMatrix(
-            floatArrayOf(
-                lr, lg, lb, 0f, 0f,
-                lr, lg, lb, 0f, 0f,
-                lr, lg, lb, 0f, 0f,
-                0f, 0f, 0f, 0f, 255f,
-            )
-        )
-        grayscaleMatrix.preConcat(inverseMatrix)
-        val dr = Color.red(destinationColor)
-        val dg = Color.green(destinationColor)
-        val db = Color.blue(destinationColor)
-        val drf = dr / 255f
-        val dgf = dg / 255f
-        val dbf = db / 255f
-        val tintMatrix = ColorMatrix(
-            floatArrayOf(
-                drf, 0f, 0f, 0f, 0f,
-                0f, dgf, 0f, 0f, 0f,
-                0f, 0f, dbf, 0f, 0f,
-                0f, 0f, 0f, 1f, 0f,
-            )
-        )
-        tintMatrix.preConcat(grayscaleMatrix)
-        val lDestianation = drf * lr + dgf * lg + dbf * lb
-        val scale = 1f - lDestianation
-        val translate = 1 - scale * 0.5f
-        val scaleMatrix = ColorMatrix(
-            floatArrayOf(
-                scale, 0f, 0f, 0f, dr * translate,
-                0f, scale, 0f, 0f, dg * translate,
-                0f, 0f, scale, 0f, db * translate,
-                0f, 0f, 0f, 1f, 0f
-            )
-        )
-        scaleMatrix.preConcat(tintMatrix)
-        val filter = ColorMatrixColorFilter(scaleMatrix)
-        map.overlayManager.tilesOverlay.setColorFilter(filter)
     }
 
     override fun onResume() {

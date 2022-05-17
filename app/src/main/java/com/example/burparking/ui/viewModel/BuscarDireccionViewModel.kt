@@ -1,21 +1,18 @@
 package com.example.burparking.ui.viewModel
 
 import android.location.Location
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.burparking.data.model.reversedireccion.ReverseDireccionModel
 import com.example.burparking.domain.model.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class BuscarDireccionViewModel @Inject constructor(
     private val getDireccionesUserCase: GetAllDireccionesUseCase,
-    private val getClosestParkingsUseCase: GetClosestParkingsUseCase,
     private val getAllParkingsUseCase: GetAllParkingsUseCase,
     private val getReverseDireccionUseCase: GetReverseDireccionUseCase
 ) :
@@ -35,12 +32,12 @@ class BuscarDireccionViewModel @Inject constructor(
     fun onCreate() {
         viewModelScope.launch {
             isLoading.value = true
-            direcciones.value = getDireccionesUserCase()
+            direcciones.value = getDireccionesUserCase()!!
             isLoading.value = false
         }
         viewModelScope.launch {
             isLoading.value = true
-            parkings.value = getAllParkingsUseCase()
+            parkings.value = getAllParkingsUseCase()!!
             isLoading.value = false
         }
 
@@ -96,8 +93,7 @@ class BuscarDireccionViewModel @Inject constructor(
                 reverseDireccion.calle,
                 reverseDireccion.codigoPostal
             )
-
-            if(parking.direccion!!.calle.isNullOrEmpty() || parking.direccion!!.numero.isNullOrEmpty()) {
+            if (parking.direccion!!.calle.isNullOrEmpty() || parking.direccion!!.numero.isNullOrEmpty()) {
                 parking.direccion!!.calle = reverseDireccion.name
             }
             parkingCargados.postValue(true)
@@ -107,7 +103,7 @@ class BuscarDireccionViewModel @Inject constructor(
 
     fun getReverseDireccion(parking: Parking) {
         viewModelScope.launch {
-           reverseDireccion.value  = getReverseDireccionUseCase(parking.lon, parking.lat)
+            reverseDireccion.value = getReverseDireccionUseCase(parking.lon, parking.lat)!!
         }
     }
 }

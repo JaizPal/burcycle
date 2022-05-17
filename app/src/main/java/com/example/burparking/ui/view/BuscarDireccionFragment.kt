@@ -6,10 +6,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.LocationManager
-import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,7 +71,7 @@ class BuscarDireccionFragment : Fragment() {
          * Muestra el progessBar dependiendo del valor de isLoading del ViewModel
          */
         buscarDireccionViewModel.isLoading.observe(requireActivity()) {
-            if(it) {
+            if (it) {
                 binding.progressBar.visibility = View.VISIBLE
             } else {
                 binding.progressBar.visibility = View.GONE
@@ -111,7 +109,7 @@ class BuscarDireccionFragment : Fragment() {
          * nParking del ViewModel vale 10 o no.
          */
         buscarDireccionViewModel.nParking.observe(requireActivity()) {
-            if(it == 10) {
+            if (it == 10) {
                 binding.shimmer.visibility = View.GONE
                 binding.shimmer.stopShimmer()
                 binding.recyclerViewParking.visibility = View.VISIBLE
@@ -269,7 +267,8 @@ class BuscarDireccionFragment : Fragment() {
                     ACCESS_FINE_LOCATION,
                     ACCESS_NETWORK_STATE,
                     READ_EXTERNAL_STORAGE,
-                    WRITE_EXTERNAL_STORAGE)
+                    WRITE_EXTERNAL_STORAGE
+                )
             }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -301,7 +300,7 @@ class BuscarDireccionFragment : Fragment() {
     private fun bajarTeclado() {
         val imm = activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         var view = activity?.currentFocus
-        if(view == null) {
+        if (view == null) {
             view = View(activity)
         }
         imm.hideSoftInputFromWindow(view.windowToken, 0)
@@ -335,5 +334,4 @@ class BuscarDireccionFragment : Fragment() {
             .translationY(-1000f)
             .duration = 400L
     }
-
 }

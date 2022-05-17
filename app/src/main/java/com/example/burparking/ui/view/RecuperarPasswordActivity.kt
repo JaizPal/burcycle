@@ -2,7 +2,6 @@ package com.example.burparking.ui.view
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity

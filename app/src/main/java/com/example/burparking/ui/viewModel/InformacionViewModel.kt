@@ -1,18 +1,15 @@
 package com.example.burparking.ui.viewModel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.burparking.domain.model.Incidencia
 import com.example.burparking.domain.model.Parking
 import com.example.burparking.domain.model.Reporte
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 @HiltViewModel
@@ -33,7 +30,7 @@ class InformacionViewModel @Inject constructor() : ViewModel() {
          * Recupera todos los reportes de la BBDD
          */
         db.collection("reportes").get().addOnSuccessListener {
-            val reportesRaw= it.documents
+            val reportesRaw = it.documents
             reportesRaw.forEach {
                 reportes.add(
                     Reporte(
@@ -50,19 +47,25 @@ class InformacionViewModel @Inject constructor() : ViewModel() {
         /*
          * Recupera todas las incidencias de la BBDD ordenadas por fecha
          */
-        db.collection("incidencias").orderBy("fecha", Query.Direction.DESCENDING).get().addOnSuccessListener {
-            val incidenciasRaw= it.documents
-            incidenciasCargadas.postValue(false)
-            incidencias.value = arrayListOf()
-            incidenciasRaw.forEach{
-                val incidencia = Incidencia(it.getLong("idParking"),it.id, it.getString("tipo")!!, it.getString("descripcion")!!)
-                if (incidencia.idParking == parking?.id) {
-                    incidencias.value?.add(incidencia)
+        db.collection("incidencias").orderBy("fecha", Query.Direction.DESCENDING).get()
+            .addOnSuccessListener {
+                val incidenciasRaw = it.documents
+                incidenciasCargadas.postValue(false)
+                incidencias.value = arrayListOf()
+                incidenciasRaw.forEach {
+                    val incidencia = Incidencia(
+                        it.getLong("idParking"),
+                        it.id,
+                        it.getString("tipo")!!,
+                        it.getString("descripcion")!!
+                    )
+                    if (incidencia.idParking == parking?.id) {
+                        incidencias.value?.add(incidencia)
+                    }
+                    incidenciasCargadas.postValue(true)
                 }
-                incidenciasCargadas.postValue(true)
-            }
 
-        }
+            }
 
     }
 
@@ -89,10 +92,9 @@ class InformacionViewModel @Inject constructor() : ViewModel() {
             }
         }
         capacidadMediaReporte /= reportesFiltrados.size
-        if(capacidadMediaReporte.isNaN()) {
+        if (capacidadMediaReporte.isNaN()) {
             capacidadMediaReporte = 0.0
         }
         capacidadMedia.postValue(capacidadMediaReporte.roundToInt())
-
     }
 }

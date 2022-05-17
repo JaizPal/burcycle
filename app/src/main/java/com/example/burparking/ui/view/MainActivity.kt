@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.ImageView
@@ -26,7 +25,6 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +32,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
-//        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
         val bundle = intent.extras
         val email = bundle?.getString("email")
         val photoURI = bundle?.getString("photoUri")
@@ -124,7 +122,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
      * Controla que botón del menú se ha pulsado.
      */
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        Log.i("Algo", item.itemId.toString() + " Jaime")
         when (item.itemId) {
             R.id.nav_cerrar_sesion -> cerrarSesion()
             R.id.incidenciaActivity -> irIncidencia()

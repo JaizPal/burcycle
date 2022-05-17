@@ -23,6 +23,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TextContrastCheck"
         tools:text="Pedalea mucho o poco" />
 
     <TextView
@@ -42,6 +43,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/parte1"
+        tools:ignore="TextContrastCheck"
         tools:text="largo o corto." />
 
     <TextView
@@ -65,12 +67,11 @@
     <Button
         android:id="@+id/buscarButton"
         style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton.Icon"
-        app:shapeAppearance="?attr/shapeAppearanceSmallComponent"
-        android:backgroundTint="@color/verdeClaro"
-        android:elevation="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="80dp"
+        android:backgroundTint="@color/verdeClaro"
+        android:elevation="4dp"
         android:fontFamily="@font/be_vietnam_light"
         android:text="@string/a_d_nde_quieres_ir"
         android:textColor="@color/white"
@@ -79,6 +80,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/autor"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="1.0"
+        app:shapeAppearance="?attr/shapeAppearanceSmallComponent"
+        tools:ignore="TextContrastCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
