@@ -1,5 +1,6 @@
 package com.example.burparking.ui.viewModel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.burparking.domain.model.Incidencia
@@ -73,7 +74,14 @@ class InformacionViewModel @Inject constructor() : ViewModel() {
      * Establece la capacidadUltimoReporte y su fecha
      */
     private fun setInformacion() {
-        reporte = reportes.find { it.idParking == parking?.id }
+        val reportesParking: ArrayList<Reporte> = arrayListOf();
+        reportes.forEach {
+            if (it.idParking == parking?.id) {
+                reportesParking.add(it)
+            }
+        }
+        reportesParking.sortBy { it.fechaReporte }
+        reporte = reportesParking.last()
         capacidadUltimoReporte.postValue(reporte?.capacidad)
         fechaUltimoReporte.postValue(reporte?.fechaReporte)
     }
