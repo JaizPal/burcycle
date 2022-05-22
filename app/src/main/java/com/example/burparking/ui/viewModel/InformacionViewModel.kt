@@ -81,7 +81,11 @@ class InformacionViewModel @Inject constructor() : ViewModel() {
             }
         }
         reportesParking.sortBy { it.fechaReporte }
-        reporte = reportesParking.last()
+        if(reportesParking.isEmpty()) {
+            reporte = null
+        } else {
+            reporte = reportesParking.last()
+        }
         capacidadUltimoReporte.postValue(reporte?.capacidad)
         fechaUltimoReporte.postValue(reporte?.fechaReporte)
     }
