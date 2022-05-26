@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
@@ -79,6 +80,11 @@ class LoginActivity : AppCompatActivity() {
                     ).addOnCompleteListener {
                         if (it.isSuccessful) {
                             FirebaseAuth.getInstance().currentUser?.sendEmailVerification()
+                                ?.addOnSuccessListener {
+                                    Log.i("Verif", "VERIFICADO EL ENVIO")
+                                }?.addOnFailureListener {
+                                    Log.i("Verif", "FALLO EL ENVIO")
+                                }
                             showAlert(
                                 "Se ha enviado un email de confirmación a su correo",
                                 "Alerta"
